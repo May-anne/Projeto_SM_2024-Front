@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import { AuthProvider } from './contexts/AuthContext'
 import { FaRegEye } from "react-icons/fa6";
 export const metadata = {
-  title: 'EditalView 👁️‍🗨️',
+  title: 'MovimentaDash 🧓👨‍🦳',
   description: '',
 }
 

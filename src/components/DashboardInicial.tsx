@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { loginUser } from '@/lib/api';
 import { FiUsers } from "react-icons/fi";
 import { PiExam } from "react-icons/pi";
-import { HeaderPage } from './HeaderPage';
+import { HeaderPage } from './Header';
 import { MdHistory, MdOutlineDirectionsRun, MdOutlinePostAdd, MdOutlineSort } from 'react-icons/md';
 import { CgInsertAfter, CgInsertBefore } from "react-icons/cg";
 import { MdFilterAlt } from "react-icons/md";
