@@ -50,7 +50,7 @@ export function HeaderPage(){
   
   return (
   <div className='bg-white w-full h-12 flex items-center'>
-    <div className='flex justify-start ml-6 cursor-pointer'>
+    <div className='flex justify-start ml-6 '>
       <MenuBar />
     </div>
   </div>

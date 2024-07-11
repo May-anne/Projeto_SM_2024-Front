@@ -8,13 +8,13 @@ import { FiUsers } from "react-icons/fi";
 import { PiExam } from "react-icons/pi";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { FaRegCircleUser } from 'react-icons/fa6';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, RefObject } from 'react';
 import Link from 'next/link';
 
 export function MenuBar() {
     const [isVisible, setIsVisible] = useState(false);
     const [isIn, setIsIn] = useState(false);
-    const sidebarRef = useRef(null);
+    const sidebarRef: RefObject<HTMLDivElement> = useRef(null);
 
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
@@ -24,8 +24,7 @@ export function MenuBar() {
         if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
             setIsVisible(false);
         }
-    };
-
+    }
     useEffect(() => {
         if (isVisible) {
             document.addEventListener('mousedown', handleClickOutside);
