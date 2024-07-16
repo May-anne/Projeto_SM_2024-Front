@@ -1,6 +1,5 @@
-
 import { DashboardInicial } from "@/components/DashboardInicial";
 
-export default function Home() {
+export default function dashboard() {
   return <DashboardInicial/>;
 }

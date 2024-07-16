@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { FaRegEye } from "react-icons/fa6";
 import { AiOutlineLock } from 'react-icons/ai';
 import { AuthContext } from "../app/contexts/AuthContext"
-import { AxiosError } from 'axios';
+import logo from '../../public/images/Pmov.png'
 import { parseCookies } from 'nookies';
 
 export function Login() {
@@ -17,11 +17,11 @@ export function Login() {
   const router = useRouter()
   
   async function handleLogin(){
-      try {
+      /*try {
         await signIn({login, senha});
       } catch (error) {
         setBadLogin(true) 
-      }
+      }*/
   };
 
   useEffect(() => {
@@ -37,10 +37,12 @@ export function Login() {
       <main className='flex flex-col items-center justify-center w-full flex-1 px-6 sm:px-10 text-center'>
         <div className='bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row w-full max-w-4xl'>
           <form className='w-full md:w-3/5 p-6 md:p-10' onSubmit={(e) => {e.preventDefault(); handleLogin()}}>
-            <div className='text-left font-bold'>
-            </div>
-            <div className='py-6 md:py-10 items-center justify-center'>
-              <h2 className='text-3xl font-sans font-semibold ml-12 text-[#6B3F97] mb-6'>Acesse sua conta</h2>
+
+            <div className='md:py-10 items-center justify-center'>
+              <Link href="/" className='hover:opacity-60'>
+                <Image src={logo} alt='' width={150} layout="intrinsic"/>
+              </Link>
+              <h2 className='text-3xl font-sans font-semibold  text-[#6B3F97] mb-6 mt-12'>Acesse sua conta</h2>
               <div className='flex flex-col items-center text-left'>
               <div className="relative my-4 w-4/5 hover:opacity-70 hover:border-gray-400">
                   <input 
