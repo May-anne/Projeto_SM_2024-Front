@@ -1,6 +1,7 @@
 'use client'
 import { HeaderOut } from "@/components/Header";
 import Image from "next/image";
+import Link from "next/link";
 import hero1 from '../../public/images/idoso1.png'
 import hero2 from '../../public/images/idoso2.png'
 import cross from '../../public/images/cross.png'
@@ -22,19 +23,18 @@ export default function Home() {
     }, 3000);
 
     return () => clearInterval(intervalId);
-  }, []);
-
+  }, []); 
   return (
     <div>
       <HeaderOut/>
       <div className="w-full top-0 flex flex-col">
-        <div className="bg-[#F8F5FA] flex flex-row justify-between overflow-hidden h-[75vh] w-full">
+        <div className="bg-[#F8F5FA] flex flex-row justify-between overflow-hidden h-[75vh] w-full ">
           <div className="flex flex-col justify-between w-[50vw] overflow-hidden ">
             <div className="flex flex-col w-full items-end gap-y-[1vh] translate-y-[18vh]">
               <p className="text-[#6B3F97] text-[3rem] w-[36vw] justify-center">Seu parceiro na saúde e bem-estar do idoso</p>
               <p className="w-[36vw] text-xl">Acesse o monitoramento completo para uma vida saudável e ativa.</p>
               <div className="flex flex-row justify-center gap-x-[5vw] w-[36vw] pt-[1vw]">
-                <button className="py-3 px-[3vw] font-semibold text-xl items-center bg-[#6B3F97] rounded-full text-white hover:bg-white hover:text-[#6B3F97] hover:border-[#6B3F97] hover:border">Entrar</button>
+                <Link href={'/login'} className="py-3 px-[3vw] font-semibold text-xl items-center bg-[#6B3F97] rounded-full text-white hover:bg-white hover:text-[#6B3F97] hover:border-[#6B3F97] hover:border">Entrar</Link>
                 <button className="py-3 px-[3vw] font-semibold text-xl items-center border-2 border-[#6B3F97] text-[#6B3F97] hover:bg-[#ded7e5] hover:border-[#524162] rounded-full">Ver Mais</button>
               </div>
             </div>
@@ -54,14 +54,14 @@ export default function Home() {
           </div>
         </div>
         <div className="flex flex-row w-full justify-end absolute">
-        {images.map((image, index) => (
-          <div 
-            key={index}
-            className={`rounded-full bg-[#6B3F97] justify-center flex h-[38vw] w-[38vw] mt-[15vh] mr-[8vw] overflow-hidden relative `}
-            style={index === currentIndex ?{transition: 'opacity 1s ease-in-out', position: 'absolute', opacity:'1'}:{transition: 'opacity 1s ease-in-out', position: 'absolute', opacity:'0' }}>
-            <Image src={image} alt='' layout="fill" objectFit="cover" />
+          {images.map((image, index) => (
+            <div 
+              key={index}
+              className={`rounded-full bg-[#6B3F97] justify-center flex h-[38vw] w-[38vw] mt-[15vh] mr-[8vw] overflow-hidden relative `}
+              style={index === currentIndex ?{transition: 'opacity 1s ease-in-out', position: 'absolute', opacity:'1'}:{transition: 'opacity 1s ease-in-out', position: 'absolute', opacity:'0' }}>
+              <Image src={image} alt='' layout="fill" objectFit="cover" />
           </div>
-        ))}
+          ))}
         </div>
         <div className="flex flex-row my-[20vh] justify-center gap-x-[5vw] items-center">
           <div className="flex flex-col gap-y-[3vh]">

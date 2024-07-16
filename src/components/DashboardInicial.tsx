@@ -2,14 +2,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { loginUser } from '@/lib/api';
-import { FiUsers } from "react-icons/fi";
-import { PiExam } from "react-icons/pi";
 import { HeaderPage } from './Header';
-import { MdHistory, MdOutlineDirectionsRun, MdOutlinePostAdd, MdOutlineSort } from 'react-icons/md';
-import { CgInsertAfter, CgInsertBefore } from "react-icons/cg";
-import { MdFilterAlt } from "react-icons/md";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdFilterAlt, MdOutlineSort } from "react-icons/md";
 import { FaPlus } from 'react-icons/fa6';
 
 interface Usuario{
@@ -40,10 +35,30 @@ export function DashboardInicial() {
             ID: '003',
         }
     ];
-    return (
+    const [selectedUser, setSelectedUser] = useState<Usuario[]>([]);
+    const [selecionarVarios, setSelecionarVarios] = useState(false);
+
+    function addPaciente(paciente: Usuario) {
+        const index = selectedUser.findIndex(u => u.ID === paciente.ID);
+        if (index !== -1) {
+            const updatedUsers = [...selectedUser];
+            updatedUsers.splice(index, 1);
+            setSelectedUser(updatedUsers);
+        } else {
+            setSelectedUser([...selectedUser, paciente]);
+        }
+    }
+
+    function handleSelecionarVarios(){
+        setSelecionarVarios(!selecionarVarios)
+        setSelectedUser([])
+    }
+
+    return ( 
         <div className='h-[100vh] w-[100vw] bg-[#eae3ef]'>
             <HeaderPage/>
-            <div className='flex flex-col h-auto justify-center items-center'>
+            <div className='flex flex-col h-full  justify-center items-center'>
+                {/*
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[2vh] mt-[9vh]'>
                     <div className='rounded-lg shadow-lg bg-[#D8C9E0] hover:opacity-80'>
                         <div className='p-[3vh]'>
@@ -127,8 +142,8 @@ export function DashboardInicial() {
                         </Link>
                     </div>
                 </div>
-
-                <div className='w-[106vh] h-[6vh] mt-[8vh] rounded-md flex items-center'>
+                */}
+                <div className='w-[106vh] h-[6vh] rounded-md flex items-center'>
                     <input
                         type="text"
                         placeholder="Pesquisar pacientes..."
@@ -142,27 +157,39 @@ export function DashboardInicial() {
                 </div>
                 <div className='w-[106vh] mt-5 bg-white shadow-lg'>
                     <div className='w-full h-[6vh] bg-white shadow-md flex items-center'>
-                        <div className='flex'>
+                        <div className='flex flex-row justify-start items-center w-full'>
                             <p className="w-[25vw] text-center border-r">Nome</p>
                             <p className="w-[5vw] text-center border-r">Sexo</p>
                             <p className="w-[5vw] text-center border-r">Idade</p>
                             <p className="w-[5vw] text-center border-r">ID</p>
+                            <div className='w-[30%] flex flex-row justify-between items-center rounded-md px-4 py-4'>
+                                <button className='text-[#6B3F97] hover:bg-gray-50 py-3 px-2 items-center flex rounded-full font-semibold'><MdOutlineSort size={24} /></button> 
+                                {selectedUser.length>1&&(<button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold'><FaRegTrashAlt  /></button>)}
+                            </div>
                         </div>
-                        <div className='flex justify-end flex-grow items-center rounded-md px-4 py-4'><MdOutlineSort className='text-[#6B3F97] hover:bg-gray-50' size={24} /> </div>
                     </div>
                     
                     <div className='border-t-2 bg-gray-50'/>
                     
-                    <div className='grid grid-rows-4 h-[25vh] overflow-scroll'>
+                    <div className='grid grid-rows-5 h-[25vh] overflow-scroll w-full'>
+                        <div className='flex flex-row p-4 items-center text-sm italic'>
+                            <input type='checkbox' onClick={()=>handleSelecionarVarios()} className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/><p>Selecionar Vários</p>
+                        </div>
                         {cardData.map((paciente) => (
                             <div key={paciente.ID} className='flex flex-row mt-[1.5vh]'>
                                 <div className="flex flex-row gap-x-4 w-[25vw] text-center border-r pl-4 overflow-hidden items-center">
-                                    <input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm' />
+                                    {selecionarVarios&&(<input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm' onClick={()=>addPaciente(paciente)}/>)}
                                     <p className="overflow-hidden whitespace-nowrap text-ellipsis ">{paciente.nome}</p>
                                 </div>
                                 <p className="w-[5vw] text-center border-r">{paciente.sexo}</p>
                                 <p className="w-[5vw] text-center border-r">{paciente.idade}</p>
                                 <p className="w-[5vw] text-center border-r">{paciente.ID}</p>
+                                {selectedUser.length<=1&&
+                                (<div className='flex flex-row w-[25%] justify-end gap-x-5'>
+                                    <button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold'><FaRegTrashAlt  /></button>
+                                    <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'>Ver Mais</button>
+                                </div>
+                                )}
                             </div>
                         ))}
                         
