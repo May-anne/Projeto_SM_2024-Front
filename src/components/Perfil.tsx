@@ -118,7 +118,7 @@ export function Perfil(){
 
                                             <FaRegCalendarAlt />
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div className='items-center gap-2'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='rg'>
                                             RG
@@ -250,20 +250,20 @@ export function Perfil(){
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Treinos</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                        <SearchBar pesquisa='Treinos' ehExame={false}  ehTreino={true} treino={treino} avaliacao={null} exame={null} id='01' nome='Hemograma' data='16/07/2024'/>
+                        <SearchBar pesquisa='Treinos' ehExame={false}  ehTreino={true} info={treino} id='01' nome='Hemograma' data='16/07/2024'/>
                     </div>
             
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Exames</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                        <SearchBar pesquisa='exames' ehExame={true}  ehTreino={false} exame={exame} treino={null} avaliacao={null} id='01' nome='Hemograma' data='16/07/2024'/>
+                        <  SearchBar pesquisa='Exames' ehExame={true}  ehTreino={false} info={exame} id='01' nome='Hemograma' data='16/07/2024'/>
                     </div>
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Avaliação</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                        <SearchBar pesquisa='Avaliações' ehExame={false} ehTreino={false} avaliacao={avaliacao} exame={null} treino={null} id='01' nome='Hemograma' data='16/07/2024' />
+                        <SearchBar pesquisa='Avaliações' ehExame={false} ehTreino={false} info={avaliacao} id='01' nome='Hemograma' data='16/07/2024' />
                     </div>
                 </div>
             </div>
