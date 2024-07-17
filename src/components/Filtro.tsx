@@ -118,8 +118,8 @@ const Filtro: React.FC<ModalProps> = ({ onClose }) =>{
                         </select>
                     </div>
                     <div className='flex justify-between mx-20 my-4'>
-                        <button className='mt-5 border-2  border-[#6B3F97] bg-transparent px-2 py-2 rounded-md text-[#6B3F97] font-semibold' onClick={onClose}>Voltar</button>
-                        <button className='mt-5 border-2 border-[#6B3F97] bg-transparent px-2 py-2 rounded-md text-[#6B3F97] font-semibold'>Aplicar</button>
+                        <button className='mt-5 border-2 font- border-[#6B3F97] bg-transparent hover:border-[#4A2569] hover:text-[#4A2569] px-4 py-2 rounded-md text-[#6B3F97] font-semibold' onClick={onClose}>Voltar</button>
+                        <button className='mt-5 border-2 border-[#6B3F97] hover:bg-transparent bg-[#6B3F97] px-4 py-2 rounded-md text-white hover:text-[#6B3F97] font-semibold'>Aplicar</button>
                     </div>
                     
                 </div>

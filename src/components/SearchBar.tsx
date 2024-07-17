@@ -1,5 +1,6 @@
 import { FaRegCalendarAlt, FaPlus } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from 'react';
+import Link from "next/link";
 
 interface CardsProps {
     pesquisa: string;
@@ -57,11 +58,11 @@ export function SearchBar(props: CardsProps) {
                 <button className="h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
                     Buscar
                 </button>
-                {!props.ehExame && (
-                    <button className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569]'>
-                        <FaPlus className='text-white' size={20} />
-                    </button>
-                )}
+                
+                <button className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569]'>
+                    <FaPlus className='text-white' size={20} />
+                </button>
+                
                 <div className="flex items-center ml-2">
                     <input
                         id="inputDataPublicacao"
