@@ -1,5 +1,6 @@
 import { FaRegCalendarAlt, FaPlus } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from 'react';
+import { AddTreino } from "./AddTreino";
 
 interface CardsProps {
     pesquisa: string;
@@ -8,9 +9,7 @@ interface CardsProps {
     id: string;
     nome: string;
     data: string;
-    treino: Treino[] | null;
-    exame: Exame[] | null;
-    avaliacao: Avaliacao[] | null;
+    info: Treino[] | Avaliacao[] | Exame[] | null;
 }
 
 interface Exame {
@@ -37,14 +36,6 @@ export function SearchBar(props: CardsProps) {
     const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDataPublicacao(e.target.value);
       };
-    
-      // Função para mostrar o seletor de data ao clicar no botão
-      const abrirSelecionadorData = () => {
-        const inputElement = document.getElementById('inputDataPublicacao');
-        if (inputElement) {
-          inputElement.click(); // Simula o clique no input de data
-        }
-      };
 
     return (
         <>
@@ -58,9 +49,7 @@ export function SearchBar(props: CardsProps) {
                     Buscar
                 </button>
                 {!props.ehExame && (
-                    <button className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569]'>
-                        <FaPlus className='text-white' size={20} />
-                    </button>
+                    <AddTreino id={2}/>
                 )}
                 <div className="flex items-center ml-2">
                     <input
@@ -85,35 +74,15 @@ export function SearchBar(props: CardsProps) {
                     </div>
                 </div>
                 <div className="overflow-y-auto h-[35vh] mt-6">
-                {props.ehExame
-                        ? (props.exame?.map((exame) => (
-                              <div key={exame.id} className="w-[50vw] h-[5vh] bg-white items-center">
-                                  <div className='flex flex-row justify-start items-center w-full'>
-                                      <p className="w-[10vw] text-center border-r">{exame.id}</p>
-                                      <p className="w-[20vw] text-center border-r">{exame.nome}</p>
-                                      <p className="w-[15vw] text-center border-r">{exame.data}</p>
-                                  </div>
-                              </div>
-                          )))
-                        : (props.ehTreino  ?                      
-                            (props.treino?.map((treino) => (
-                            <div key={treino.id} className="w-[50vw] h-[5vh] bg-white items-center">
-                                <div className='flex flex-row justify-start items-center w-full'>
-                                    <p className="w-[10vw] text-center border-r">{treino.id}</p>
-                                    <p className="w-[20vw] text-center border-r">{treino.nome}</p>
-                                    <p className="w-[15vw] text-center border-r">{treino.data}</p>
-                                </div>
+                    {props.info?.map((inf) => (
+                        <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
+                            <div className='flex flex-row justify-start items-center w-full'>
+                                <p className="w-[10vw] text-center border-r">{inf.id}</p>
+                                <p className="w-[20vw] text-center border-r">{inf.nome}</p>
+                                <p className="w-[15vw] text-center border-r">{inf.data}</p>
                             </div>
-                            )))
-                      : (props.avaliacao?.map((avaliacao) => (
-                          <div key={avaliacao.id} className="w-[50vw] h-[5vh] bg-white items-center">
-                              <div className='flex flex-row justify-start items-center w-full'>
-                                  <p className="w-[10vw] text-center border-r">{avaliacao.id}</p>
-                                  <p className="w-[20vw] text-center border-r">{avaliacao.nome}</p>
-                                  <p className="w-[15vw] text-center border-r">{avaliacao.data}</p>
-                              </div>
-                          </div>)))
-                        )}
+                        </div>
+                    ))}
                 </div>
             </div>
         </>

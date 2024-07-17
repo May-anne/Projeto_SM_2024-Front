@@ -115,7 +115,7 @@ export function DashboardInicial() {
                                 {selectedUser.length<=1&&
                                 (<div className='flex flex-row w-[25%] justify-end gap-x-5'>
                                     <button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold'><FaRegTrashAlt  /></button>
-                                    <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'> <Link href='/Perfil'> Ver Mais </Link></button>
+                                    <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'> <Link href='/perfil'> Ver Mais </Link></button>
                                 </div>
                                 )}
                             </div>

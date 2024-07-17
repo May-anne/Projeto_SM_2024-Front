@@ -24,7 +24,7 @@ export function Login() {
   };
 
   useEffect(() => {
-    const { 'engsoft.token': token } = parseCookies()
+    const { 'movimenta.token': token } = parseCookies()
     if(token){
       router.push('/dashboard')
     }
