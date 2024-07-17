@@ -80,7 +80,7 @@ export function Relatorios(){
         <div className='bg-[#D8C9E0] h-auto w-[100vw] overflow-y-auto'>
             <HeaderPage/>
             <div className='flex flex-col justify-center items-center mt-20'>
-                <div className='bg-[#F8F5FA] shadow-lg rounded-lg h-auto w-[60vw]'>
+                <div className='bg-[#F8F5FA] shadow-lg rounded-lg h-[83vh] w-[60vw]'>
                     <div className='flex justify-center items-center mt-8 gap-1'>
                         <h2 className='font-semibold text-2xl text-[#6B3F97]'>Relatórios</h2>
                         <div className='border border-t-2 border-gray-50'></div>
@@ -88,12 +88,23 @@ export function Relatorios(){
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Relatórios de Usuário</h2>
                     </div>
-                    <div className='justify-start items-center flex mx-12 '>
-                        <div className='h-[40vh] w-[60vw] bg-white shadow-2xl rounded-md overflow-y-auto'>
+                    <div className='justify-start items-center grid grid-cols-2 mx-12 '>
+                        <div className='h-[20vh] w-[20vw] bg-white shadow-2xl rounded-2xl overflow-y-auto'>
                             <div className='p-6'>
                                 <div className='justify-between flex items-center'>
                                     <div className='items-center gap-2'>
+                                        <h3 className='text-lg mb-5'>Exames</h3>
                                         <button className='w-[10vw] h-[5vh] rounded-md bg-[#6B3F97] text-white ' onClick={() => handleExport(exame)}>Baixar CSV</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='h-[20vh] w-[20vw] bg-white shadow-2xl rounded-2xl overflow-y-auto'>
+                            <div className='p-6'>
+                                <div className='justify-between flex items-center'>
+                                    <div className='items-center gap-2'>
+                                        <h3 className='text-lg mb-5'>Treino</h3>
+                                        <button className='w-[10vw] h-[5vh] rounded-md bg-[#6B3F97] text-white ' onClick={() => handleExport(treino)}>Baixar CSV</button>
                                     </div>
                                 </div>
                             </div>
