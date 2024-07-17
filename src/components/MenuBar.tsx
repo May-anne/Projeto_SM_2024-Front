@@ -79,7 +79,7 @@ export function MenuBar() {
                     <ul className='space-y-8'>
                         <li className='flex items-center'>
                             <MdOutlineSpaceDashboard className='mr-2' size={22} />
-                            <Link href='#' className='block text-gray-600 hover:underline'>Início</Link>
+                            <Link href='/' className='block text-gray-600 hover:underline'>Início</Link>
                         </li>
                         <li className='flex items-center'>
                             <FiUsers className='mr-2' size={22} />
@@ -105,9 +105,9 @@ export function MenuBar() {
                     <Link href='#' className='block text-gray-600 hover:underline'>Ajuda</Link>
                 </li>
                 <div className='flex justify-center items-end absolute bottom-0 w-full'>
-                    <button className='flex items-center gap-2 border-2 border-[#6B3F9] rounded-md text-[#6B3F97] px-2 py-1 mb-3'>
+                    <Link href='/api/auth/logout' className='flex items-center gap-2 border-2 border-[#6B3F9] rounded-md text-[#6B3F97] px-2 py-1 mb-3'>
                         <MdLogout className='text-[#6B3F9]' /> Sair
-                    </button>
+                    </Link>
                 </div>
             </div>
         </>
