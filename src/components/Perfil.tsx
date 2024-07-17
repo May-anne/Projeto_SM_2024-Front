@@ -3,13 +3,17 @@ import React, { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FaLock, FaRegEye } from "react-icons/fa6";
+import { FaLock, FaPlus, FaRegEye } from "react-icons/fa6";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { AiOutlineExport, AiOutlineLock } from 'react-icons/ai';
 import { AuthContext } from "../app/contexts/AuthContext"
 import { AxiosError } from 'axios';
 import { parseCookies } from 'nookies';
 import { HeaderPage } from './Header';
+import { MdFilterAlt } from 'react-icons/md';
+import { GoSingleSelect } from "react-icons/go";
+import { SearchBar } from './SearchBar';
+
 
 export function Perfil(){
     return(
@@ -180,8 +184,7 @@ export function Perfil(){
                                             className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                             id='nome' type='text'/>
                                     </div>
-                                </div>
-                                
+                                </div> 
                             </div>
                         </div>
                     </div>
@@ -191,29 +194,15 @@ export function Perfil(){
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Treinos</h2>
                     </div>
-                    <div className='justify-start items-center flex mx-12'>
-                        <div className='h-[40vh] w-[60vw] bg-white shadow-2xl rounded-md mb-4'>
-                    
-                        </div>
+                    <div className='justify-start items-center mx-12'>
+                        <SearchBar pesquisa='treinos' exame={false}/>
                     </div>
+            
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Exames</h2>
                     </div>
-                    <div className='justify-start items-center flex mx-12'>
-                        <div className='h-[40vh] w-[60vw] bg-white shadow-2xl rounded-md mb-4'>
-                    
-                        </div>
-                    </div>
-                    <div>
-                        <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Histórico</h2>
-                    </div>
-                    <div className='justify-start items-center flex mx-12'>
-                        <div className='h-[40vh] w-[60vw] bg-white shadow-2xl rounded-md mb-4'>
-                    
-                        </div>
-                    </div>
-                    <div className='flex justify-end mx-12'>
-                        <button className='flex items-center gap-1 bg-[#6B3F97] hover:bg-[#4F2B70] px-2 py-2 rounded-md text-white'> <AiOutlineExport /> Gerar Relatório</button>
+                    <div className='justify-start items-center mx-12'>
+                    <SearchBar pesquisa='exames' exame={true}/>
                     </div>
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Avaliação</h2>
