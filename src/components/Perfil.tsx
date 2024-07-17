@@ -14,9 +14,63 @@ import { MdFilterAlt } from 'react-icons/md';
 import { GoSingleSelect } from "react-icons/go";
 import { SearchBar } from './SearchBar';
 
+interface Exame{
+    id: string;
+    nome: string;
+    data: string;
+}
+
+interface Treino{
+    id: string;
+    nome: string;
+    data: string;
+}
+
+interface Avaliacao{
+    id: string;
+    nome: string;
+    data: string;
+}
+
 
 export function Perfil(){
+    const [exame, setExame] = useState<Exame[]>([]);
+    const [treino, setTreinos] = useState<Treino[]>([]);
+    const [avaliacao, setAvaliacao] = useState<Avaliacao[]>([]);
+    const [dataPublicacao, setDataPublicacao] = useState<string>('');
+
+    useEffect(() => {
+        // Simulando a busca de dados de exame e treino (substitua com sua lógica real)
+        fetchExames(); 
+        fetchTreinos();
+    }, []);
+
+    const fetchExames = () => {
+        // Simulação de dados de exame
+        const mockExames: Exame[] = [
+            { id: '1', nome: 'Exame 1', data: '2023-01-01' },
+            { id: '2', nome: 'Exame 2', data: '2023-02-15' },
+            // Adicione mais dados conforme necessário
+        ];
+        setExame(mockExames);
+    };
+
+    const fetchTreinos = () => {
+        // Simulação de dados de treino
+        const mockTreinos: Treino[] = [
+            { id: '1', nome: 'Treino 1', data: '2023-03-10' },
+            { id: '2', nome: 'Treino 2', data: '2023-04-20' },
+            // Adicione mais dados conforme necessário
+        ];
+        setTreinos(mockTreinos);
+    };
+
+    const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDataPublicacao(e.target.value);
+      };
+
     return(
+        
         <div className='bg-[#D8C9E0] h-auto w-[100vw] overflow-y-auto'>
             <HeaderPage/>
             <div className='flex flex-col justify-center items-center mt-20'>
@@ -61,6 +115,7 @@ export function Perfil(){
                                         <input
                                             className='shadow appearance-none border rounded w-[10vw] py-1 px-2 leading-tight focus:outline-none focus:shadow-outline'
                                             id='nome' type='text' />
+
                                             <FaRegCalendarAlt />
                                         </div>
                                     </div>
@@ -195,22 +250,20 @@ export function Perfil(){
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Treinos</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                        <SearchBar pesquisa='treinos' exame={false}/>
+                        <SearchBar pesquisa='Treinos' ehExame={false}  ehTreino={true} treino={treino} avaliacao={null} exame={null} id='01' nome='Hemograma' data='16/07/2024'/>
                     </div>
             
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Exames</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                    <SearchBar pesquisa='exames' exame={true}/>
+                        <SearchBar pesquisa='Exames' ehExame={true}  ehTreino={false} exame={exame} treino={null} avaliacao={null} id='01' nome='Hemograma' data='16/07/2024'/>
                     </div>
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Avaliação</h2>
                     </div>
-                    <div className='justify-start items-center flex mx-12'>
-                        <div className='h-[40vh] w-[60vw] bg-white shadow-2xl rounded-md mb-8'>
-                    
-                        </div>
+                    <div className='justify-start items-center mx-12'>
+                        <SearchBar pesquisa='Avaliações' ehExame={false} ehTreino={false} avaliacao={avaliacao} exame={null} treino={null} id='01' nome='Hemograma' data='16/07/2024' />
                     </div>
                 </div>
             </div>

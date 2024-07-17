@@ -7,9 +7,11 @@ import { RiMenuFold4Line } from "react-icons/ri";
 import { FiUsers } from "react-icons/fi";
 import { PiExam } from "react-icons/pi";
 import { IoMdHelpCircleOutline } from "react-icons/io";
-import { FaRegCircleUser } from 'react-icons/fa6';
+import { FaRegCircleUser, FaRegNoteSticky } from 'react-icons/fa6';
 import React, { useState, useEffect, useRef, RefObject } from 'react';
 import Link from 'next/link';
+import { DashboardInicial } from './DashboardInicial';
+
 
 export function MenuBar() {
     const [isVisible, setIsVisible] = useState(false);
@@ -79,23 +81,19 @@ export function MenuBar() {
                     <ul className='space-y-8'>
                         <li className='flex items-center'>
                             <MdOutlineSpaceDashboard className='mr-2' size={22} />
-                            <Link href='/' className='block text-gray-600 hover:underline'>Início</Link>
+                            <Link href='/dashboard' className='block text-gray-600 hover:underline'>Início</Link>
                         </li>
                         <li className='flex items-center'>
-                            <FiUsers className='mr-2' size={22} />
-                            <Link href='#' className='block text-gray-600 hover:underline'>Cadastros</Link>
-                        </li>
-                        <li className='flex items-center'>
-                            <MdOutlineDirectionsRun className='mr-2' size={22} />
-                            <Link href='#' className='block text-gray-600 hover:underline'>Treinos</Link>
+                            <MdHistory className='mr-2' size={22} />
+                            <Link href='#' className='block text-gray-600 hover:underline'>Históricos</Link>
                         </li>
                         <li className='flex items-center'>
                             <PiExam className='mr-2' size={22} />
                             <Link href='#' className='block text-gray-600 hover:underline'>Exames</Link>
                         </li>
                         <li className='flex items-center'>
-                            <MdHistory className='mr-2' size={22} />
-                            <Link href='#' className='block text-gray-600 hover:underline'>Históricos</Link>
+                            <FaRegNoteSticky className='mr-2' size={22} />
+                            <Link href='#' className='block text-gray-600 hover:underline'>Avaliações</Link>
                         </li>
                     </ul>
                 </div>
