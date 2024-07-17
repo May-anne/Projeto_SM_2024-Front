@@ -3,25 +3,24 @@ import React, { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FaRegEye } from "react-icons/fa6";
 import { AiOutlineLock } from 'react-icons/ai';
 import { AuthContext } from "../app/contexts/AuthContext"
 import logo from '../../public/images/Pmov.png'
 import { parseCookies } from 'nookies';
 
 export function Login() {
-  const [login, setLogin] = useState('');
+  const [nome, setNome] = useState('');
   const [senha, setSenha] = useState('');
   const { signIn } = useContext(AuthContext)
   const [badLogin, setBadLogin] = useState(false)
   const router = useRouter()
   
   async function handleLogin(){
-      /*try {
-        await signIn({login, senha});
+      try {
+        await signIn({nome, senha});
       } catch (error) {
         setBadLogin(true) 
-      }*/
+      }
   };
 
   useEffect(() => {
@@ -47,8 +46,8 @@ export function Login() {
               <div className="relative my-4 w-4/5 hover:opacity-70 hover:border-gray-400">
                   <input 
                     type="username" 
-                    value={login} 
-                    onChange={(e) => setLogin(e.target.value)}
+                    value={nome} 
+                    onChange={(e) => setNome(e.target.value)}
                     className="border border-[#1C1C1C] rounded-md pl-10 pr-3 py-2 w-full block text-sm text-[#1C1C1C] bg-transparent border-1 appearance-none focus:outline-none focus:ring-0 focus:border-[#6B3F97]" 
                     placeholder="Usuário" 
                     required
@@ -85,10 +84,10 @@ export function Login() {
                 <div>
 
                 </div>
-                <div className='absolute bottom-0 left-0 pb-5 pl-5'>
+                <Link href={'/'} className='absolute bottom-0 left-0 pb-5 pl-5 hover:opacity-60'>
                     <h2 className='text-left font-sans'>PROJETO</h2>
                     <h2 className='text-2xl font-sans font-semibold'>MOVIMENTA+</h2>
-                </div>
+                </Link>
             </div>
           
         </div>
