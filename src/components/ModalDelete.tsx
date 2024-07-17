@@ -33,7 +33,7 @@ export function ModalDelete({ isOpen, onClose, termo }: ModalProps) {
                         Confirmar
                     </button>
                     <button 
-                        className='rounded-lg shadow-md border-2 border-red-700 hover:border-red-900 bg-transparent text-red-700 px-3 py-2 font-semibold'
+                        className='rounded-lg shadow-md border-2 border-red-700 hover:border-red-900 hover:text-red-900 bg-transparent text-red-700 px-3 py-2 font-semibold'
                         onClick={onClose}
                     >
                         Cancelar

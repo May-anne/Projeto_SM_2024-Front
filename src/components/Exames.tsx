@@ -1,6 +1,6 @@
 "use client"
 import { FaLock } from 'react-icons/fa6';
-import { FaEdit, FaRegTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaRegTrashAlt,FaFilePdf } from 'react-icons/fa';
 import { ModalDelete } from './ModalDelete';
 import { useState } from 'react';
 
@@ -22,7 +22,7 @@ export function Exames(){
     return (
         <div className='bg-[#F0F0F0] h-[35vh] w-[50vw] rounded-lg shadow-lg overflow-y-auto'>
             <div className='flex items-center justify-between p-4'>
-                <h2 className='font-semibold text-xl text-[#6B3F97] text-center'>Título do Exame</h2>
+                <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2'>Título do Exame</h2>
                 <div className='flex items-center gap-3'>
                     <button><FaEdit className='text-[#6B3F97] cursor-pointer hover:text-[#4A2569]' size={22} /></button>
                     <button onClick={handleOpenModal}><FaRegTrashAlt className='text-red-700 hover:text-red-900 cursor-pointer' size={20} /></button>
@@ -64,7 +64,7 @@ export function Exames(){
                 </div>
             </div>
             <div className='my-8 mx-6'>
-                <button className='px-2 py-1 bg-[#2D6A4F] hover:bg-[#1D4D3F] rounded-md text-white mb-3'>Adicionar PDF</button>
+                <button className='px-2 py-1 bg-[#2D6A4F] hover:bg-[#1D4D3F] rounded-md text-white mb-3 items-center flex gap-2 text-lg'><FaFilePdf className='text-white' size={20}/> Adicionar PDF</button>
                 <p className='text-blue-700 hover:underline hover:text-blue-900 cursor-pointer'>nome do arquivo.pdf</p>
             </div>
             <div className='justify-end flex mx-5 mb-8'>
