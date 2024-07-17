@@ -118,7 +118,7 @@ export function Perfil(){
 
                                             <FaRegCalendarAlt />
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div className='items-center gap-2'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='rg'>
                                             RG
@@ -257,7 +257,7 @@ export function Perfil(){
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Exames</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                        <SearchBar pesquisa='Exames' ehExame={true}  ehTreino={false} info={exame} id='01' nome='Hemograma' data='16/07/2024'/>
+                        <  SearchBar pesquisa='Exames' ehExame={true}  ehTreino={false} info={exame} id='01' nome='Hemograma' data='16/07/2024'/>
                     </div>
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Avaliação</h2>

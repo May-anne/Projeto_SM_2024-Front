@@ -1,8 +1,9 @@
 import { DashboardInicial } from "@/components/DashboardInicial";
-import { Filtro } from "@/components/Filtro";
+import { Exames } from "@/components/Exames";
 import { cookies } from 'next/headers'
 import { redirect } from "next/navigation";
 
-export default async function acesso() {
-  return <Filtro />;
+export default function exames() {
+  return <Exames />;
 }
+
