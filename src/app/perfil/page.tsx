@@ -1,6 +1,6 @@
 
 import { Perfil } from "@/components/Perfil";
 
-export default async function acesso() {
+export default function acesso() {
   return <Perfil />;
 }
