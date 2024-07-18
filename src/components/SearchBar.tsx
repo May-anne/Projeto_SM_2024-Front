@@ -1,7 +1,8 @@
 import { FaRegCalendarAlt, FaPlus } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from 'react';
-import { Exames } from "./Exames";
+import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
+import { AddAvaliacao } from "./AddAvaliacao";
 
 interface CardsProps {
     pesquisa: string;
@@ -39,6 +40,7 @@ export function SearchBar(props: CardsProps) {
     const [dataPublicacao, setDataPublicacao] = useState<string>('');
     const [isExameModalOpen, setIsExameModalOpen] = useState(false);
     const [isTreinoModalOpen, setIsTreinoModalOpen] = useState(false);
+    const [isAvaliacaoModalOpen, setIsAvaliacaoModalOpen] = useState(false);
 
     const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDataPublicacao(e.target.value);
@@ -49,11 +51,17 @@ export function SearchBar(props: CardsProps) {
             setIsExameModalOpen(true);
         } else if (props.ehTreino) {
             setIsTreinoModalOpen(true);
+        } else {
+            setIsAvaliacaoModalOpen(true);
         }
     };
 
     const handleCloseExame = () => {
         setIsExameModalOpen(false);
+    };
+
+    const handleCloseAvaliacao = () => {
+        setIsAvaliacaoModalOpen(false);
     };
 
     return (
@@ -107,7 +115,15 @@ export function SearchBar(props: CardsProps) {
             {isExameModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-transparent p-6 rounded-lg shadow-lg w-[60vw]">
-                        <Exames isOpen={isExameModalOpen} onClose={handleCloseExame} />
+                        <AddExame isOpen={isExameModalOpen} onClose={handleCloseExame} />
+                    </div>
+                </div>
+            )}
+
+            {isAvaliacaoModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-transparent p-6 rounded-lg shadow-lg w-[60vw]">
+                        <AddAvaliacao isOpen={isAvaliacaoModalOpen} onClose={handleCloseAvaliacao} />
                     </div>
                 </div>
             )}

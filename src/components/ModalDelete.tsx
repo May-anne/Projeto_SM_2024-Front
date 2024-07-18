@@ -20,7 +20,7 @@ export function ModalDelete({ isOpen, onClose, termo }: ModalProps) {
                     <h2 className='font-semibold text-xl text-[#6B3F97]'>Confirmar Exclusão</h2>
                 </div>
                 <div className='p-4 ml-4 mr-4 text-center'>
-                    <p className='text-base'>{`Tem certeza de que deseja excluir este ${termo}? Esta ação é irreversível.`}</p>
+                    <p className='text-base'>{`Tem certeza de que deseja excluir ${termo}? Esta ação é irreversível.`}</p>
                 </div>
                 <div className='flex justify-center gap-10 mb-6'>
                     <button 
