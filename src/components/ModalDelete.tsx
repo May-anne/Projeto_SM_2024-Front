@@ -15,7 +15,7 @@ export function ModalDelete({ isOpen, onClose, termo }: ModalProps) {
 
     return (
         <div className='fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50'>
-            <div className='bg-[#F0F0F0] h-[25vh] w-[25vw] rounded-lg shadow-lg overflow-y-auto'>
+            <div className='bg-[#F0F0F0] h-[30vh] w-[30vw] rounded-lg shadow-lg overflow-y-auto'>
                 <div className='pt-6 text-center'>
                     <h2 className='font-semibold text-xl text-[#6B3F97]'>Confirmar Exclusão</h2>
                 </div>

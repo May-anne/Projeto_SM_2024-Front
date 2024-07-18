@@ -10,6 +10,11 @@ interface CardsProps {
   id: number
 }
 
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 export function AddTreino(props:CardsProps) {
   
   const [showModal, setShowModal] = useState(false);

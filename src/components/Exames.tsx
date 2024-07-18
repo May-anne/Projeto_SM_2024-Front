@@ -5,10 +5,11 @@ import { ModalDelete } from './ModalDelete';
 import { useState } from 'react';
 
 interface ModalProps {
+    isOpen: boolean;
     onClose: () => void;
 }
 
-export function Exames(){
+export function Exames({ isOpen, onClose }: ModalProps){
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleOpenModal = () => {
@@ -18,11 +19,13 @@ export function Exames(){
     const handleCloseModal = () => {
       setIsModalOpen(false);
     };
+
+    if (!isOpen) return null;
     
     return (
-        <div className='bg-[#F0F0F0] h-[35vh] w-[50vw] rounded-lg shadow-lg overflow-y-auto'>
+            <div className='bg-[#F0F0F0] h-[50vh] w-[60vw] rounded-lg shadow-lg overflow-y-auto'>
             <div className='flex items-center justify-between p-4'>
-                <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2'>Título do Exame</h2>
+                <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2 mt-2'>Título do Exame</h2>
                 <div className='flex items-center gap-3'>
                     <button><FaEdit className='text-[#6B3F97] cursor-pointer hover:text-[#4A2569]' size={22} /></button>
                     <button onClick={handleOpenModal}><FaRegTrashAlt className='text-red-700 hover:text-red-900 cursor-pointer' size={20} /></button>
@@ -63,13 +66,15 @@ export function Exames(){
                         id='nome' type='text'/>
                 </div>
             </div>
-            <div className='my-8 mx-6'>
+            <div className='mt-6 mx-6'>
                 <button className='px-2 py-1 bg-[#2D6A4F] hover:bg-[#1D4D3F] rounded-md text-white mb-3 items-center flex gap-2 text-lg'><FaFilePdf className='text-white' size={20}/> Adicionar PDF</button>
-                <p className='text-blue-700 hover:underline hover:text-blue-900 cursor-pointer'>nome do arquivo.pdf</p>
             </div>
-            <div className='justify-end flex mx-5 mb-8'>
-                <button className='border-2 border-[#6B3F97] bg-transparent hover:border-[#4A2569] hover:text-[#4A2569] px-4 py-1 rounded-md text-[#6B3F97] font-semibold'>Voltar</button>
+            <div className='mx-6'>
+                <p className='text-blue-700 w-auto hover:underline hover:text-blue-900 cursor-pointer'>nome do arquivo.pdf</p>
+            </div>
+            <div className='justify-end flex mx-8 mb-8'>
+                <button onClick={onClose} className='border-2 text-lg border-[#6B3F97] bg-transparent hover:border-[#4A2569] hover:text-[#4A2569] px-4 py-1 rounded-md text-[#6B3F97] font-semibold'>Voltar</button>
             </div>
         </div>
-    );
+    )
 }
