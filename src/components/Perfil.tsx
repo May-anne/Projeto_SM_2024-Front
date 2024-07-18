@@ -34,6 +34,7 @@ interface Avaliacao{
 
 
 export function Perfil(){
+    const [vermais, setVerMais] = useState('')
     const [exame, setExame] = useState<Exame[]>([]);
     const [treino, setTreinos] = useState<Treino[]>([]);
     const [avaliacao, setAvaliacao] = useState<Avaliacao[]>([]);
@@ -85,7 +86,7 @@ export function Perfil(){
                     <div className='justify-start items-center flex mx-12 '>
                         <div className='h-[40vh] w-[60vw] bg-white shadow-2xl rounded-md overflow-y-auto'>
                             <div className='p-6'>
-                                <div className='justify-between flex items-center'>
+                                <div className='grid grid-cols-3 items-center'>
                                     <div className='items-center gap-2'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='id'>
                                             ID
@@ -106,7 +107,7 @@ export function Perfil(){
                                             id='nome' type='text'/>
                                     </div>
                                 </div>
-                                <div className='justify-between flex items-center mt-4'>
+                                <div className='grid grid-cols-4 gap-6 items-center mt-4'>
                                     <div className='items-center gap-2'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='nasc'>
                                             Data de Nascimento
@@ -114,9 +115,7 @@ export function Perfil(){
                                         <div className='flex items-center gap-2'>
                                         <input
                                             className='shadow appearance-none border rounded w-[10vw] py-1 px-2 leading-tight focus:outline-none focus:shadow-outline'
-                                            id='nome' type='text' />
-
-                                            <FaRegCalendarAlt />
+                                            id='nome' type='date' />
                                         </div>
                                     </div> 
                                     <div className='items-center gap-2'>
@@ -132,10 +131,10 @@ export function Perfil(){
                                             CPF
                                         </label>
                                         <input
-                                            className='shadow appearance-none border rounded w-[13vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                            className='shadow appearance-none border rounded w-[11vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                             id='nome' type='text'/>
                                     </div>
-                                    <div className='items-center gap-2'>
+                                    <div className='items-center gap-2 ml-3'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='sexo'>
                                             Sexo
                                         </label>
@@ -147,29 +146,29 @@ export function Perfil(){
                                             </select>
                                     </div>
                                 </div>
-                                <div className='justify-between flex items-center mt-4'>
-                                    <div className='items-center gap-2'>
+                                <div className='grid grid-cols-3 gap-4 mt-4'>
+                                    <div className='items-center'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='raca'>
                                             Raça
                                         </label>
                                         <div className='flex items-center gap-2'>
-                                        <select
-                                            className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                                            id='raca'>
-                                            <option value='branco'>Amarelo</option>
-                                            <option value='branco'>Branco</option>
-                                            <option value='indigena'>Indígena/Nativo</option>
-                                            <option value='pardo'>Pardo</option>
-                                            <option value='preto'>Preto</option>
+                                            <select
+                                                className='shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                id='raca'>
+                                                <option value='branco'>Amarelo</option>
+                                                <option value='branco'>Branco</option>
+                                                <option value='indigena'>Indígena/Nativo</option>
+                                                <option value='pardo'>Pardo</option>
+                                                <option value='preto'>Preto</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div className='items-center gap-2'>
+                                    <div className='items-center'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='escolaridade'>
                                             Escolaridade
                                         </label>
                                         <select
-                                            className='shadow appearance-none border rounded w-[20vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                            className='shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                             id='escolaridade'>
                                             <option value='sem'>Sem instrução</option>
                                             <option value='fund_incompl'>Ensino fundamental incompleto</option>
@@ -181,42 +180,42 @@ export function Perfil(){
                                             <option value='pos'>Pós-graduação completa</option>
                                             <option value='tec'>Ensino técnico ou profissionalizante</option>
                                             <option value='outro'>Outro</option>
-                                            </select>
+                                        </select>
+                                        </div>
+                                            <div className='items-center'>
+                                                <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='telefone'>
+                                                    Telefone
+                                                </label>
+                                                <input
+                                                    className='shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                    id='telefone' type='text'/>
+                                            </div>
                                     </div>
-                                    <div className='items-center gap-2'>
-                                        <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='ID'>
-                                            Telefone
-                                        </label>
-                                        <input
-                                            className='shadow appearance-none border rounded w-[12vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                                            id='nome' type='text'/>
-                                    </div>
-                                </div>
-                                <div className='justify-between flex items-center mt-6'>
+                                <div className='grid grid-cols-3 gap-0 items-center mt-6'>
                                     <div className='items-center gap-2'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='endereco'>
                                             Endereço
                                         </label>
                                         <div className='flex items-center gap-2'>
                                         <input
-                                            className='shadow appearance-none border rounded w-[20vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                            className='shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                             id='nome' type='text'/>
                                         </div>
                                     </div>
-                                    <div className='items-center gap-2'>
+                                    <div className='items-center gap-2 mx-4'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='cep'>
                                             CEP
                                         </label>
                                         <input
-                                            className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                            className='shadow appearance-none border rounded w-[80%] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                             id='nome' type='text'/>
                                     </div>
-                                    <div className='items-center gap-2'>
+                                    <div className='items-center gap-2 ml-6'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='bairro'>
                                             Bairro
                                         </label>
                                         <input
-                                            className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                            className='shadow appearance-none border rounded w-[80%] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                             id='nome' type='text'/>
                                     </div>
                                 </div>

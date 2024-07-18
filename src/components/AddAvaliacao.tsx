@@ -44,7 +44,7 @@ export function AddAvaliacao({ isOpen, onClose }: ModalProps){
     if (!isOpen) return null;
     
     return (
-            <div className='bg-[#F0F0F0] h-[60vh] w-[60vw] rounded-lg shadow-lg overflow-y-auto' style={{maxHeight: '60vh', scrollbarWidth: 'thin'}}>
+            <div className='bg-[#F8F5FA] h-[60vh] w-[60vw] rounded-lg shadow-lg overflow-y-auto' style={{maxHeight: '60vh', scrollbarWidth: 'thin'}}>
             <div className='flex items-center justify-between p-6'>
                 <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2 mt-2'>Título da Avaliação</h2>
                 <div className='flex items-center gap-3'>
@@ -99,7 +99,7 @@ export function AddAvaliacao({ isOpen, onClose }: ModalProps){
                         Peso (kg)
                     </label>
                     <input
-                        className='shadow appearance-none border rounded w-[8vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                        className='shadow appearance-none border rounded w-[7vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         id='peso' type='number'
                         value={peso}
                         readOnly={!isEditing}
@@ -110,7 +110,7 @@ export function AddAvaliacao({ isOpen, onClose }: ModalProps){
                         Estatura (m)
                     </label>
                     <input
-                        className='shadow appearance-none border rounded w-[8vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                        className='shadow appearance-none border rounded w-[7vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         id='estatura' type='number'
                         value={estatura}
                         readOnly={!isEditing}
@@ -121,7 +121,7 @@ export function AddAvaliacao({ isOpen, onClose }: ModalProps){
                         Marcha (m)
                     </label>
                     <input
-                        className='shadow appearance-none border rounded w-[8vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                        className='shadow appearance-none border rounded w-[7vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         id='marcha' type='number'
                         value={marcha}
                         readOnly={!isEditing}
@@ -211,7 +211,7 @@ export function AddAvaliacao({ isOpen, onClose }: ModalProps){
                             onChange={(e) => setEsquerdo2(e.target.value)}/>
                     </div>
                 </div>
-                <div className='grid grid-cols-2 ml-8 mt-5'>
+                <div className='grid grid-cols-3 ml-8 mt-5'>
                     <div className='items-center gap-2'>
                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='tug1'>
                                 TUG 1 (segundos)
