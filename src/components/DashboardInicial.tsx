@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HeaderPage } from './Header';
@@ -7,6 +7,9 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdFilterAlt, MdOutlineSort } from "react-icons/md";
 import { FaPlus } from 'react-icons/fa6';
 import Filtro from './Filtro';
+import router from 'next/router';
+import { parseCookies } from 'nookies';
+import { getIdosos } from '@/lib/api';
 
 
 interface Usuario{
@@ -16,28 +19,54 @@ interface Usuario{
     ID: string,
 }
 
+interface Idoso{
+    id: number,
+    nome: string,
+    data_nascimento: string,
+    sexo: string,
+    raca: string,
+    escolaridade: string,
+    deficiencia: boolean,
+    deficiencia_quais: string,
+    telefone_pessoal: string,
+    telefone_emergencial: string,
+    endereco: string,
+    bairro: string,
+    cep: string,
+    rg: string,
+    cpf: string,
+    cartao_cns: string,
+    plano_saude: boolean,
+    plano_saude_qual: string,
+    onde_moras: string,
+    com_quem_mora: string,
+    quantos_residem: number,
+    meio_transporte: string,
+    situacao_economica: string,
+    renda: number,
+    problemas_saude: boolean,
+    problemas_saude_quais: string,
+    cirgurgia_recente: boolean,
+    cirurgia_quais: string,
+    internacao_recente: boolean,
+    internacao_quais: string,
+    alcool: boolean,
+    fumante: boolean,
+    drogas: boolean,
+    medicamentos: boolean,
+    medicamentos_quais: string
+}
+
 export function DashboardInicial() {
-    const cardData = [
-        {
-            nome: "Ana Maria Braga",
-            sexo: 'F',
-            idade: '68',
-            ID: '001',
-        },
-        {
-            nome: "Silvio Santos",
-            sexo: 'M',
-            idade: '75',
-            ID: '002',
-        },
-        {
-            nome: "Jô Soares",
-            sexo: 'M',
-            idade: '78',
-            ID: '003',
-        }
-    ];
-    const [selectedUser, setSelectedUser] = useState<Usuario[]>([]);
+
+    useEffect(() => {
+        getIdosos().then((result) => {
+            setIdososList(result)
+        })
+      },[])
+
+    const [idososList, setIdososList] = useState<Idoso[]>([]);
+    const [selectedUser, setSelectedUser] = useState<Idoso[]>([]);
     const [selecionarVarios, setSelecionarVarios] = useState(false);
     const [isFiltroAberto, setIsFiltroAberto] = useState(false);
 
@@ -49,8 +78,8 @@ export function DashboardInicial() {
         setIsFiltroAberto(false);
     };
 
-    function addPaciente(paciente: Usuario) {
-        const index = selectedUser.findIndex(u => u.ID === paciente.ID);
+    function addPaciente(paciente: Idoso) {
+        const index = selectedUser.findIndex(u => u.id === paciente.id);
         if (index !== -1) {
             const updatedUsers = [...selectedUser];
             updatedUsers.splice(index, 1);
@@ -63,6 +92,22 @@ export function DashboardInicial() {
     function handleSelecionarVarios(){
         setSelecionarVarios(!selecionarVarios)
         setSelectedUser([])
+    }
+
+    function calcularIdade(dataNascimento: string): number {
+        const hoje = new Date();
+        const nascimento = new Date(dataNascimento);
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const mes = hoje.getMonth() - nascimento.getMonth();
+
+        if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+        }
+
+        if(idade<0){
+            idade = 0
+        }
+        return idade;
     }
 
     return (
@@ -103,19 +148,19 @@ export function DashboardInicial() {
                         <div className='flex flex-row p-4 items-center text-sm italic'>
                             <input type='checkbox' onClick={()=>handleSelecionarVarios()} className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/><p>Selecionar Vários</p>
                         </div>
-                        {cardData.map((paciente) => (
-                            <div key={paciente.ID} className='flex flex-row mt-[1.5vh]'>
+                        {idososList.map((paciente) => (
+                            <div key={paciente.id} className='flex flex-row mt-[1.5vh]'>
                                 <div className="flex flex-row gap-x-4 w-[25vw] text-center border-r pl-4 overflow-hidden items-center">
                                     {selecionarVarios&&(<input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm' onClick={()=>addPaciente(paciente)}/>)}
                                     <p className="overflow-hidden whitespace-nowrap text-ellipsis ">{paciente.nome}</p>
                                 </div>
                                 <p className="w-[5vw] text-center border-r">{paciente.sexo}</p>
-                                <p className="w-[5vw] text-center border-r">{paciente.idade}</p>
-                                <p className="w-[5vw] text-center border-r">{paciente.ID}</p>
+                                <p className="w-[5vw] text-center border-r">{calcularIdade(paciente.data_nascimento)}</p>
+                                <p className="w-[5vw] text-center border-r">{paciente.id}</p>
                                 {selectedUser.length<=1&&
                                 (<div className='flex flex-row w-[25%] justify-end gap-x-5'>
                                     <button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold'><FaRegTrashAlt  /></button>
-                                    <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'> <Link href='/perfil'> Ver Mais </Link></button>
+                                    <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'> <Link href={`/perfil?id=${paciente.id}`}> Ver Mais </Link></button>
                                 </div>
                                 )}
                             </div>
