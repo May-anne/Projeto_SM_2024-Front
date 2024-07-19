@@ -1,6 +1,8 @@
 import { FaRegCalendarAlt, FaPlus } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from 'react';
+import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
+import { AddAvaliacao } from "./AddAvaliacao";
 
 interface CardsProps {
     pesquisa: string;
@@ -30,12 +32,37 @@ interface Treino {
     data: string;
 }
 
+interface ModalProps {
+    onClose: () => void;
+}
+
 export function SearchBar(props: CardsProps) {
     const [dataPublicacao, setDataPublicacao] = useState<string>('');
+    const [isExameModalOpen, setIsExameModalOpen] = useState(false);
+    const [isTreinoModalOpen, setIsTreinoModalOpen] = useState(false);
+    const [isAvaliacaoModalOpen, setIsAvaliacaoModalOpen] = useState(false);
 
     const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDataPublicacao(e.target.value);
-      };
+    };
+
+    const handlePlusButtonClick = () => {
+        if (props.ehExame) {
+            setIsExameModalOpen(true);
+        } else if (props.ehTreino) {
+            setIsTreinoModalOpen(true);
+        } else {
+            setIsAvaliacaoModalOpen(true);
+        }
+    };
+
+    const handleCloseExame = () => {
+        setIsExameModalOpen(false);
+    };
+
+    const handleCloseAvaliacao = () => {
+        setIsAvaliacaoModalOpen(false);
+    };
 
     return (
         <>
@@ -49,7 +76,9 @@ export function SearchBar(props: CardsProps) {
                     Buscar
                 </button>
                 {!props.ehExame && (
-                    <AddTreino id={5}/>
+                    <button onClick={handlePlusButtonClick} className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569]'>
+                    <FaPlus className='text-white' size={20} />
+                    </button>
                 )}
                 <div className="flex items-center ml-2">
                     <input
@@ -85,6 +114,21 @@ export function SearchBar(props: CardsProps) {
                     ))}
                 </div>
             </div>
+            {isExameModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-transparent p-6 rounded-lg shadow-lg w-[60vw]">
+                        <AddExame isOpen={isExameModalOpen} onClose={handleCloseExame} />
+                    </div>
+                </div>
+            )}
+
+            {isAvaliacaoModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-transparent p-6 rounded-lg shadow-lg w-[60vw]">
+                        <AddAvaliacao isOpen={isAvaliacaoModalOpen} onClose={handleCloseAvaliacao} />
+                    </div>
+                </div>
+            )}
         </>
     );
 }

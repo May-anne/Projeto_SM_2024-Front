@@ -5,11 +5,16 @@ import { ModalDelete } from './ModalDelete';
 import { useState } from 'react';
 
 interface ModalProps {
+    isOpen: boolean;
     onClose: () => void;
 }
 
-export function Exames(){
+export function AddExame({ isOpen, onClose }: ModalProps){
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [nomePaciente, setNomePaciente] = useState('Nome do Paciente');
+    const [dataExame, setDataExame] = useState('Data do Exame');
+    const [pdfExame, setPdfExame] = useState('pdf');
 
     const handleOpenModal = () => {
       setIsModalOpen(true);
@@ -18,30 +23,36 @@ export function Exames(){
     const handleCloseModal = () => {
       setIsModalOpen(false);
     };
+
+    const handleEditClick = () => {
+        setIsEditing(true);
+    };
+
+    if (!isOpen) return null;
     
     return (
-        <div className='bg-[#F0F0F0] h-[35vh] w-[50vw] rounded-lg shadow-lg overflow-y-auto'>
-            <div className='flex items-center justify-between p-4'>
-                <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2'>Título do Exame</h2>
+            <div className='bg-[#F0F0F0] h-[52vh] w-[60vw] rounded-lg shadow-lg overflow-y-auto'>
+            <div className='flex items-center justify-between p-6'>
+                <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2 mt-2'>Título do Exame</h2>
                 <div className='flex items-center gap-3'>
-                    <button><FaEdit className='text-[#6B3F97] cursor-pointer hover:text-[#4A2569]' size={22} /></button>
+                    <button onClick={handleEditClick}><FaEdit className='text-[#6B3F97] cursor-pointer hover:text-[#4A2569]' size={22} /></button>
                     <button onClick={handleOpenModal}><FaRegTrashAlt className='text-red-700 hover:text-red-900 cursor-pointer' size={20} /></button>
                 </div>
             </div>
             <ModalDelete 
                 isOpen={isModalOpen} 
                 onClose={handleCloseModal} 
-                termo="exame" 
+                termo="este exame" 
             />
-            <div className='justify-between flex'>
-                <div className='relative items-center gap-2 mx-6'>
+            <div className='flex justify-start gap-8'>
+                <div className='relative items-center gap-2 mx-8'>
                     <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='nome'>
                         ID Exame
                     </label>
                     <div className='relative'>
                         <input
                             className='shadow bg-gray-100 appearance-none border rounded w-[10vw] py-1 px-4 pl-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                            id='nome' type='text' readOnly
+                            id='nome' type='text' defaultValue='0000' readOnly
                         />
                         <FaLock className='absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500' size={16} />
                     </div>
@@ -51,8 +62,11 @@ export function Exames(){
                         Nome do Paciente
                     </label>
                     <input
-                        className='shadow appearance-none border rounded w-[20vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                        id='nome' type='text'/>
+                        className='shadow appearance-none border rounded w-[25vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                        id='nome' type='text'
+                        value={nomePaciente}
+                        readOnly={!isEditing}
+                        onChange={(e) => setNomePaciente(e.target.value)}/>
                 </div>
                 <div className='items-center gap-2 mr-8'>
                     <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='nome'>
@@ -60,16 +74,24 @@ export function Exames(){
                     </label>
                     <input
                         className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                        id='nome' type='text'/>
+                        id='nome' type='date'
+                        value={dataExame}
+                        readOnly={!isEditing}
+                        onChange={(e) => setDataExame(e.target.value)}/>
                 </div>
             </div>
-            <div className='my-8 mx-6'>
+            <div className='mt-8 mx-8'>
                 <button className='px-2 py-1 bg-[#2D6A4F] hover:bg-[#1D4D3F] rounded-md text-white mb-3 items-center flex gap-2 text-lg'><FaFilePdf className='text-white' size={20}/> Adicionar PDF</button>
-                <p className='text-blue-700 hover:underline hover:text-blue-900 cursor-pointer'>nome do arquivo.pdf</p>
             </div>
-            <div className='justify-end flex mx-5 mb-8'>
-                <button className='border-2 border-[#6B3F97] bg-transparent hover:border-[#4A2569] hover:text-[#4A2569] px-4 py-1 rounded-md text-[#6B3F97] font-semibold'>Voltar</button>
+            <div className='mx-8'>
+                <button className='text-blue-700 w-auto hover:underline hover:text-blue-900 cursor-pointer'>
+                    nome do arquivo.pdf
+                </button>
+            </div>
+            <div className='flex justify-end gap-8 mx-8'>
+                <button onClick={onClose} className='border-2 text-lg border-[#6B3F97] bg-[#6B3F97] hover:border-[#4A2569] hover:bg-[#4A2569] px-4 py-1 rounded-md text-white font-semibold'>Salvar</button>
+                <button onClick={onClose} className='border-2 text-lg border-[#9387AB] bg-transparent hover:border-[#4A2569] hover:text-[#4A2569] px-4 py-1 rounded-md text-[#9387AB] font-semibold'>Voltar</button>
             </div>
         </div>
-    );
+    )
 }
