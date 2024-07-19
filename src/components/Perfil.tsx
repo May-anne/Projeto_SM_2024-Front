@@ -2,17 +2,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation'
 import { FaLock, FaPlus, FaRegEye } from "react-icons/fa6";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import { AiOutlineExport, AiOutlineLock } from 'react-icons/ai';
-import { AuthContext } from "../app/contexts/AuthContext"
-import { AxiosError } from 'axios';
-import { parseCookies } from 'nookies';
 import { HeaderPage } from './Header';
-import { MdFilterAlt } from 'react-icons/md';
-import { GoSingleSelect } from "react-icons/go";
 import { SearchBar } from './SearchBar';
+import { getIdoso } from '@/lib/api';
 
 interface Exame{
     id: string;
@@ -32,38 +27,101 @@ interface Avaliacao{
     data: string;
 }
 
+interface Idoso{
+    id: number,
+    nome: string,
+    data_nascimento: string,
+    sexo: string,
+    raca: string,
+    escolaridade: string,
+    deficiencia: boolean,
+    deficiencia_quais: string,
+    telefone_pessoal: string,
+    telefone_emergencial: string,
+    endereco: string,
+    bairro: string,
+    cep: string,
+    rg: string,
+    cpf: string,
+    cartao_cns: string,
+    plano_saude: boolean,
+    plano_saude_qual: string,
+    onde_moras: string,
+    com_quem_mora: string,
+    quantos_residem: number,
+    meio_transporte: string,
+    situacao_economica: string,
+    renda: number,
+    problemas_saude: boolean,
+    problemas_saude_quais: string,
+    cirgurgia_recente: boolean,
+    cirurgia_quais: string,
+    internacao_recente: boolean,
+    internacao_quais: string,
+    alcool: boolean,
+    fumante: boolean,
+    drogas: boolean,
+    medicamentos: boolean,
+    medicamentos_quais: string
+}
+
 
 export function Perfil(){
+    const [verMais, setVerMais] = useState(false);
     const [exame, setExame] = useState<Exame[]>([]);
     const [treino, setTreinos] = useState<Treino[]>([]);
     const [avaliacao, setAvaliacao] = useState<Avaliacao[]>([]);
     const [dataPublicacao, setDataPublicacao] = useState<string>('');
+    const [selectedIdoso, setSelectedIdoso] = useState<Idoso[]>([]);
+
+    const [idosoInfo, setIdosoInfo] = useState({
+        id: 0,
+        nome: '',
+        data_nascimento: '',
+        sexo: '',
+        raca: '',
+        escolaridade: '',
+        deficiencia: '',
+        deficiencia_quais: '',
+        telefone_pessoal: '',
+        telefone_emergencial: '',
+        endereco: '',
+        bairro: '',
+        cep: '',
+        rg: '',
+        cpf: '',
+        cartao_cns: '',
+        plano_saude: '',
+        plano_saude_qual: '',
+        onde_moras: '',
+        com_quem_mora: '',
+        quantos_residem: '',
+        meio_transporte: '',
+        situacao_economica: '',
+        renda: '',
+        problemas_saude: '',
+        problemas_saude_quais: '',
+        cirgurgia_recente: '',
+        cirurgia_quais: '',
+        internacao_recente: '',
+        internacao_quais: '',
+        alcool: '',
+        fumante: '',
+        drogas: '',
+        medicamentos: '',
+        medicamentos_quais: ''
+    })
+
+    const searchParams = useSearchParams()
+    const id = searchParams.get('id')
 
     useEffect(() => {
-        // Simulando a busca de dados de exame e treino (substitua com sua lógica real)
-        fetchExames(); 
-        fetchTreinos();
+        if (typeof id === 'string') {
+            getIdoso(id).then(data => {setSelectedIdoso(data); setIdosoInfo(data); });  
+        }
     }, []);
 
-    const fetchExames = () => {
-        // Simulação de dados de exame
-        const mockExames: Exame[] = [
-            { id: '1', nome: 'Exame 1', data: '2023-01-01' },
-            { id: '2', nome: 'Exame 2', data: '2023-02-15' },
-            // Adicione mais dados conforme necessário
-        ];
-        setExame(mockExames);
-    };
 
-    const fetchTreinos = () => {
-        // Simulação de dados de treino
-        const mockTreinos: Treino[] = [
-            { id: '1', nome: 'Treino 1', data: '2023-03-10' },
-            { id: '2', nome: 'Treino 2', data: '2023-04-20' },
-            // Adicione mais dados conforme necessário
-        ];
-        setTreinos(mockTreinos);
-    };
 
     const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDataPublicacao(e.target.value);
@@ -83,12 +141,12 @@ export function Perfil(){
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Dados Pessoais</h2>
                     </div>
                     <div className='justify-start items-center flex mx-12 '>
-                        <div className='h-[40vh] w-[60vw] bg-white shadow-2xl rounded-md overflow-y-auto'>
+                        <div className='w-[60vw] bg-white shadow-2xl rounded-md '>
                             <div className='p-6'>
                                 <div className='justify-between flex items-center'>
                                     <div className='items-center gap-2'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='id'>
-                                            ID
+                                            ID: <span className='font-normal'>{idosoInfo.id}</span>
                                         </label>
                                         <div className='flex items-center gap-2'>
                                         <input
@@ -240,12 +298,233 @@ export function Perfil(){
                                             id='nome' type='text'/>
                                     </div>
                                 </div> 
+                                
+                                {verMais&&<span>
+                                    <div className='w-full flex flex-row justify-between px-12 mt-16 mb-4'>
+                                        <h2 className='font-semibold text-xl text-[#6B3F97]'>Informações de Renda</h2>
+                                        <button className='text-xs text-blue-700 font-semibold hover:opacity-60'>LIMPAR TUDO</button>
+                                    </div>
+                                    <div className='justify-start items-center flex px-12 w-full'>
+                                        <div className='w-full shadow-2xl rounded-md'>
+                                            <div className='p-6'>
+                                                <div className='justify-start grid grid-cols-2 items-start mt-6 gap-y-10'>
+
+                                                        <p className='block text-gray-700 text-sm font-bold'> Onde mora?</p>
+                                                        <div className='flex items-center gap-2'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                                id='sexo'>
+                                                                <option value='Casa'>Casa</option>
+                                                                <option value='Apartamento'>Apartamento</option>
+                                                                <option value='ILPI'>ILPI</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <p className='block text-gray-700 text-sm font-bold'>Com quem mora?</p>
+                                                        <div className='flex items-center gap-2'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                                id='sexo'>
+                                                                <option value='Familia'>Família</option>
+                                                                <option value='Sozinho(a)'>Sozinho(a)</option>
+                                                                <option value='Amigo(a)'>Amigo(a)</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Quantos residem com você?</p>
+                                                        <div className='flex items-center gap-2'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                                id='sexo'>
+                                                                <option value='0'>Sozinho(a)</option>
+                                                                <option value='1'>Duas</option>
+                                                                <option value='2'>Tres</option>
+                                                                <option value='3'>Quatro</option>
+                                                                <option value='4'>Cinco</option>
+                                                                <option value='5'>Mais de cinco</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Qual meio de transporte usado para vir ao projeto?</p>
+                                                        <div className='flex items-center gap-2'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[14vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                                id='sexo'>
+                                                                <option value='A pé'>A pé</option>
+                                                                <option value='Bicicleta'>Bicicleta</option>
+                                                                <option value='Transporte público'>Transporte público</option>
+                                                                <option value='Transporte particular'>Transporte particular</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Qual a sua renda mensal?</p>
+                                                        <div className='flex items-center gap-2'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[14vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                                id='sexo'>
+                                                                <option value='Aposentado(a)'>Aposentado(a)</option>
+                                                                <option value='Pensionista'>Pensionista</option>
+                                                                <option value='Desempregado(a)'>Desempregado(a)</option>
+                                                                <option value='Autonomo(a)'>Autonomo(a)</option>
+                                                                <option value='Empregado(a)'>Empregado(a)</option>
+                                                            </select>
+                                                        </div>
+
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='w-full flex flex-row justify-between px-12 mt-16 mb-4'>
+                                        <h2 className='font-semibold text-xl text-[#6B3F97]'>Informações de Saúde</h2>
+                                        <button className='text-xs text-blue-700 font-semibold hover:opacity-60'>LIMPAR TUDO</button>
+                                    </div>
+                                    <div className='justify-start items-center flex px-12 w-full'>
+                                        <div className='w-full shadow-2xl rounded-md mb-20'>
+                                            <div className='p-6'>
+                                                <div className='justify-start grid grid-cols-2 items-start mt-6 gap-y-10'>
+                                                        <p className='block text-gray-700 text-sm font-bold'>Tem alguma deficiência?</p>
+                                                        <div className='flex flex-row w-full gap-x-10 items-start'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] h-8 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+
+                                                            <div className='flex flex-row gap-x-2'>
+                                                                <textarea name="" id="" className='w-[14vw]'></textarea>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <p className='block text-gray-700 text-sm font-bold'>Tem algum plano de saúde?</p>
+                                                        <div className='flex flex-row w-full gap-x-10 items-start'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] h-8 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+
+                                                            <input type="text" name="" id="" className='w-[14vw]'/>
+
+                                                        </div>
+
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Tem algum problema de saúde?</p>
+                                                        <div className='flex flex-row w-full gap-x-10'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] h-8 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+
+                                                            <div className='flex flex-col gap-y-2 border items-start gap-2 py-2 px-3 w-[14vw]'>
+                                                                <div className='flex flex-row items-center'>
+                                                                    <input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/>
+                                                                    <p className="overflow-hidden whitespace-nowrap text-ellipsis ">Cardiovascular</p>
+                                                                </div>
+
+                                                                <div className='flex flex-row items-center'>
+                                                                    <input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/>
+                                                                    <p className="overflow-hidden whitespace-nowrap text-ellipsis ">Respiratória</p>
+                                                                </div>
+
+                                                                <div className='flex flex-row items-center'>
+                                                                    <input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/>
+                                                                    <p className="overflow-hidden whitespace-nowrap text-ellipsis ">Osteoarticular</p>
+                                                                </div>
+
+                                                                <div className='flex flex-row items-center'>
+                                                                    <input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/>
+                                                                    <p className="overflow-hidden whitespace-nowrap text-ellipsis ">Metabólica</p>
+                                                                </div>
+
+                                                                <div className='flex flex-row items-center'>
+                                                                    <input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/>
+                                                                    <p className="overflow-hidden whitespace-nowrap text-ellipsis ">Psiquiátrica</p>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>   
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Fez cirurgia nos últimos 12 meses?</p>
+                                                        <div className='flex flex-row w-full gap-x-10 items-start'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] h-8 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+
+                                                            <div className='flex flex-row gap-x-2'>
+                                                                <textarea name="" id="" className='w-[14vw]'></textarea>
+                                                            </div>
+
+                                                        </div>  
+
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Teve alguma internação nos últimos 12 meses?</p>
+                                                        <div className='flex flex-row w-full gap-x-10 items-start'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] h-8 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+
+                                                            <div className='flex flex-row gap-x-2'>
+                                                                <textarea name="" id="" className='w-[14vw]'></textarea>
+                                                            </div>
+
+                                                        </div>   
+                                                            
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Toma medicamento regularmente?</p>
+                                                        <div className='flex flex-row w-full gap-x-10 items-start'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] h-8 py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+
+                                                            <div className='flex flex-row gap-x-2'>
+                                                                <textarea name="" id="" className='w-[14vw]'></textarea>
+                                                            </div>
+
+                                                        </div> 
+
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Faz uso de álcool?</p>
+                                                        <div className='flex items-center gap-2'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>É fumante?</p>
+                                                        <div className='flex items-center gap-2'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Faz uso de drogas?</p>
+                                                        <div className='flex items-center gap-2'>
+                                                            <select
+                                                                className='shadow appearance-none border rounded w-[5vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+                                                                <option value='sim'>Sim</option>
+                                                                <option value='nao'>Não</option>
+                                                            </select>
+                                                        </div>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>}
                             </div>
+
                         </div>
                     </div>
-                    <div className='text-sm text-blue-600 hover:text-blue-800 justify-end flex mx-12 my-3 hover:underline cursor-pointer'>
-                        <p>Ver mais</p>
-                    </div>
+                    <button onClick={()=>setVerMais(!verMais)} className='text-sm text-blue-600 hover:text-blue-800 justify-end flex flex-row w-full px-12 my-3 hover:underline cursor-pointer'>
+                        {verMais?('Ver menos'):('Ver mais')}
+                    </button>
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Treinos</h2>
                     </div>

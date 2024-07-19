@@ -1,5 +1,6 @@
 import { FaRegCalendarAlt, FaPlus } from "react-icons/fa";
 import React, { useContext, useEffect, useState } from 'react';
+import { AddTreino } from "./AddTreino";
 
 interface CardsProps {
     pesquisa: string;
@@ -48,9 +49,7 @@ export function SearchBar(props: CardsProps) {
                     Buscar
                 </button>
                 {!props.ehExame && (
-                    <button className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569]'>
-                        <FaPlus className='text-white' size={20} />
-                    </button>
+                    <AddTreino id={5}/>
                 )}
                 <div className="flex items-center ml-2">
                     <input
