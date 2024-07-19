@@ -50,8 +50,11 @@ export function HeaderPage(){
   
   return (
   <div className='bg-white w-full h-12 flex items-center'>
-    <div className='flex justify-start ml-6 '>
+    <div className='flex flex-row justify-between px-6 w-full '>
       <MenuBar />
+      <Link href={'/dashboard'} className="hover:opacity-60"><Image src={logo} alt='' width={150} layout="intrinsic"/></Link>
+      
+      <div></div>
     </div>
   </div>
 );
