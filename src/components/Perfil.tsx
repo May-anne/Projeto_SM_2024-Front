@@ -7,7 +7,7 @@ import { FaLock, FaPlus, FaRegEye } from "react-icons/fa6";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { HeaderPage } from './Header';
 import { SearchBar } from './SearchBar';
-import { getIdoso } from '@/lib/api';
+import { getIdoso, updateIdoso } from '@/lib/api';
 import cross from '../../public/images/cross.png'
 
 interface Exame{
@@ -29,7 +29,6 @@ interface Avaliacao{
 }
 
 interface Idoso{
-    id: number,
     nome: string,
     data_nascimento: string,
     sexo: string,
@@ -69,15 +68,14 @@ interface Idoso{
 
 export function Perfil(){
     const [verMais, setVerMais] = useState(false);
+    const [editado, setEditado] = useState(false);
     const [exame, setExame] = useState<Exame[]>([]);
     const [treino, setTreinos] = useState<Treino[]>([]);
     const [avaliacao, setAvaliacao] = useState<Avaliacao[]>([]);
     const [dataPublicacao, setDataPublicacao] = useState<string>('');
     
-    const [selectedIdoso, setSelectedIdoso] = useState<Idoso[]>([]);
-
+    const [selectedIdoso, setSelectedIdoso] = useState<Idoso>();
     const [idosoInfo, setIdosoInfo] = useState<Idoso>({
-        id: 0,
         nome: '',
         data_nascimento: '',
         sexo: '',
@@ -174,26 +172,6 @@ export function Perfil(){
             [id]: booleanValue
         }));
     };
-    
-    
-    const renderCrossImages = () => {
-        const images = [];
-        let tam = verMais?(26):(14)
-        for (let i = 0; i < tam; i++) {
-            images.push(
-                <div className={`z-10 justify-between w-full flex-row flex ${i%2==0?'px-36':'px-16'}`}>
-                    <div key={i} className="rounded-full justify-center flex h-[5vw] w-[5vw] overflow-hidden relative">
-                        <Image src={cross} alt='' layout="fill" objectFit="cover" />
-                    </div>
-
-                    <div key={i} className="z-10 rounded-full justify-center flex h-[5vw] w-[5vw] overflow-hidden relative">
-                        <Image src={cross} alt='' layout="fill" objectFit="cover" />
-                    </div>
-                </div>
-            );
-        }
-        return images;
-    };
 
     const problemas = options.problemas;
 
@@ -210,100 +188,131 @@ export function Perfil(){
             setIdosoInfo(prevState => ({ ...prevState, problemas_saude_quais: updatedProblems }));
         }
     };
-
-    const searchParams = useSearchParams()
-    const id = searchParams.get('id')
-
-    useEffect(() => {
-        if (typeof id === 'string') {
-            getIdoso(id).then(data => {setSelectedIdoso(data); setIdosoInfo(data); });  
-        }
-    }, []);
     
     function LimparTudo(row: number){
-        if(row == 1){
-            setIdosoInfo({
-                id: idosoInfo.id,
-                nome: idosoInfo.nome,
-                data_nascimento: idosoInfo.data_nascimento,
-                sexo: idosoInfo.sexo,
-                raca: idosoInfo.raca,
-                escolaridade: idosoInfo.escolaridade,
-                telefone_pessoal: idosoInfo.telefone_pessoal,
-                telefone_emergencial: idosoInfo.telefone_emergencial,
-                endereco: idosoInfo.endereco,
-                bairro: idosoInfo.bairro,
-                cep: idosoInfo.cep,
-                rg: idosoInfo.rg,
-                cpf: idosoInfo.cpf,
-                cartao_cns: idosoInfo.cartao_cns,
+        const pt1 = row == 0 ? {
+            nome: '',
+            data_nascimento: '',
+            sexo: '',
+            raca: '',
+            escolaridade: '',
+            telefone_pessoal: '',
+            telefone_emergencial: '',
+            endereco: '',
+            bairro: '',
+            cep: '',
+            rg: '',
+            cpf: '',
+            cartao_cns: '',
+        } : {
+            nome: idosoInfo.nome,
+            data_nascimento: idosoInfo.data_nascimento,
+            sexo: idosoInfo.sexo,
+            raca: idosoInfo.raca,
+            escolaridade: idosoInfo.escolaridade,
+            telefone_pessoal: idosoInfo.telefone_pessoal,
+            telefone_emergencial: idosoInfo.telefone_emergencial,
+            endereco: idosoInfo.endereco,
+            bairro: idosoInfo.bairro,
+            cep: idosoInfo.cep,
+            rg: idosoInfo.rg,
+            cpf: idosoInfo.cpf,
+            cartao_cns: idosoInfo.cartao_cns,
+        };
+        
+        const pt2 = row == 1 ? {
+            onde_moras: '',
+            com_quem_mora: '',
+            quantos_residem: 0,
+            meio_transporte: '',
+            situacao_economica: '',
+            renda: 0,
+        } : {
+            onde_moras: idosoInfo.onde_moras,
+            com_quem_mora: idosoInfo.com_quem_mora,
+            quantos_residem: idosoInfo.quantos_residem,
+            meio_transporte: idosoInfo.meio_transporte,
+            situacao_economica: idosoInfo.situacao_economica,
+            renda: idosoInfo.renda
+        };
 
-                deficiencia: idosoInfo.deficiencia,
-                deficiencia_quais: idosoInfo.deficiencia_quais,
-                plano_saude: idosoInfo.plano_saude,
-                plano_saude_qual: idosoInfo.plano_saude_qual,
-                problemas_saude: idosoInfo.problemas_saude,
-                problemas_saude_quais: idosoInfo.problemas_saude_quais,
-                cirgurgia_recente: idosoInfo.cirgurgia_recente,
-                cirurgia_quais: idosoInfo.cirurgia_quais,
-                internacao_recente: idosoInfo.internacao_recente,
-                internacao_quais: idosoInfo.internacao_quais,
-                alcool: idosoInfo.alcool,
-                fumante: idosoInfo.fumante,
-                drogas: idosoInfo.drogas,
-                medicamentos: idosoInfo.medicamentos,
-                medicamentos_quais: idosoInfo.medicamentos_quais,
+        const pt3 = row == 2 ? {
+            deficiencia: false,
+            deficiencia_quais: '',
+            plano_saude: false,
+            plano_saude_qual: '',
+            problemas_saude: false,
+            problemas_saude_quais: '',
+            cirgurgia_recente: false,
+            cirurgia_quais: '',
+            internacao_recente: false,
+            internacao_quais: '',
+            alcool: false,
+            fumante: false,
+            drogas: false,
+            medicamentos: false,
+            medicamentos_quais: ''
+        } : {
+            deficiencia: idosoInfo.deficiencia,
+            deficiencia_quais: idosoInfo.deficiencia_quais,
+            plano_saude: idosoInfo.plano_saude,
+            plano_saude_qual: idosoInfo.plano_saude_qual,
+            problemas_saude: idosoInfo.problemas_saude,
+            problemas_saude_quais: idosoInfo.problemas_saude_quais,
+            cirgurgia_recente: idosoInfo.cirgurgia_recente,
+            cirurgia_quais: idosoInfo.cirurgia_quais,
+            internacao_recente: idosoInfo.internacao_recente,
+            internacao_quais: idosoInfo.internacao_quais,
+            alcool: idosoInfo.alcool,
+            fumante: idosoInfo.fumante,
+            drogas: idosoInfo.drogas,
+            medicamentos: idosoInfo.medicamentos,
+            medicamentos_quais: idosoInfo.medicamentos_quais,
+        };
 
-                onde_moras: '',
-                com_quem_mora: '',
-                quantos_residem: 0,
-                meio_transporte: '',
-                situacao_economica: '',
-                renda: 0,
-            })
-        }
-        else if(row == 2){
-            setIdosoInfo({
-                id: idosoInfo.id,
-                nome: idosoInfo.nome,
-                data_nascimento: idosoInfo.data_nascimento,
-                sexo: idosoInfo.sexo,
-                raca: idosoInfo.raca,
-                escolaridade: idosoInfo.escolaridade,
-                telefone_pessoal: idosoInfo.telefone_pessoal,
-                telefone_emergencial: idosoInfo.telefone_emergencial,
-                endereco: idosoInfo.endereco,
-                bairro: idosoInfo.bairro,
-                cep: idosoInfo.cep,
-                rg: idosoInfo.rg,
-                cpf: idosoInfo.cpf,
-                cartao_cns: idosoInfo.cartao_cns,
+        const updatedIdosoInfo = {
+            ...idosoInfo,
+            ...pt1,
+            ...pt2,
+            ...pt3
+        };
+    
+        setIdosoInfo(updatedIdosoInfo);
 
-                onde_moras: idosoInfo.onde_moras,
-                com_quem_mora: idosoInfo.com_quem_mora,
-                quantos_residem: idosoInfo.quantos_residem,
-                meio_transporte: idosoInfo.meio_transporte,
-                situacao_economica: idosoInfo.situacao_economica,
-                renda: idosoInfo.renda,
-            
-                deficiencia: false,
-                deficiencia_quais: '',
-                plano_saude: false,
-                plano_saude_qual: '',
-                problemas_saude: false,
-                problemas_saude_quais: '',
-                cirgurgia_recente: false,
-                cirurgia_quais: '',
-                internacao_recente: false,
-                internacao_quais: '',
-                alcool: false,
-                fumante: false,
-                drogas: false,
-                medicamentos: false,
-                medicamentos_quais: ''
-            })
-        }
     }
+    
+    const renderCrossImages = () => {
+        const images = [];
+        let tam = verMais?(25):(14)
+        for (let i = 0; i < tam; i++) {
+            images.push(
+                <div className={`z-10 justify-between w-full flex-row flex ${i%2==0?'px-36':'px-16'}`}>
+                    <div key={i} className="rounded-full justify-center flex h-[5vw] w-[5vw] overflow-hidden relative">
+                        <Image src={cross} alt='' layout="fill" objectFit="cover" />
+                    </div>
+
+                    <div key={-i-1} className="z-10 rounded-full justify-center flex h-[5vw] w-[5vw] overflow-hidden relative">
+                        <Image src={cross} alt='' layout="fill" objectFit="cover" />
+                    </div>
+                </div>
+            );
+        }
+        return images;
+    };
+
+    const searchParams = useSearchParams()
+    const cpf = searchParams.get('cpf')
+
+    useEffect(() => {
+        if (typeof cpf === 'string') {
+            getIdoso(cpf).then(data => {setSelectedIdoso(data); setIdosoInfo(data); });  
+        }
+    }, []);
+
+    useEffect(() => {
+        idosoInfo == selectedIdoso?(setEditado(false)):(setEditado(true))
+    }, [idosoInfo]);
+    
     return(
         
         <div className='bg-[#D8C9E0] h-auto w-[100vw] overflow-y-auto'>
@@ -318,8 +327,16 @@ export function Perfil(){
                         <h2 className='font-semibold text-2xl text-[#6B3F97]'>Perfil do(a) Paciente</h2>
                         <div/>
                     </div>
-                    <div>
-                        <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Dados Pessoais</h2>
+                    <div className='flex flex-row w-full justify-between items-center px-12'>
+                        <h2 className='font-semibold text-xl text-[#6B3F97]  mt-8 mb-4'>Dados Pessoais</h2>
+                        <div className='flex flex-row gap-x-5'>
+                            {editado&&
+                                <>
+                                    <button className='py-2 px-4 bg-red-1100 items-center justify-center rounded-full hover:opacity-60' onClick={()=>{if (selectedIdoso) {setIdosoInfo(selectedIdoso);}}}>Cancelar</button>
+                                    <button className='py-2 px-4 bg-green-1300 items-center justify-center rounded-full hover:opacity-60' onClick={()=> {if (idosoInfo) {updateIdoso(idosoInfo)}; setEditado(false)}}>Salvar</button>
+                                </> 
+                            }
+                        </div>
                     </div>
                     <div className='justify-start items-center flex mx-12 '>
                         <div className='w-[60vw] bg-white shadow-2xl rounded-md '>
@@ -333,12 +350,8 @@ export function Perfil(){
                                             className='shadow appearance-none border rounded w-[30vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                             id='nome' type='text' value={idosoInfo.nome} onChange={handleChange}/>
                                     </div>
-                                    <div></div>
-                                    <div className='items-center gap-2'>
-                                        <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='id'>
-                                            ID: <span className='font-normal'>{idosoInfo.id}</span>
-                                        </label>
-                                    </div> 
+                                    <div/>
+                                    <div/>
                                 </div>
                                 <div className='grid grid-cols-4 gap-6 items-center mt-4'>
                                     <div className='items-center gap-2'>
