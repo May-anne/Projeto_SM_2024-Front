@@ -20,7 +20,6 @@ interface Usuario{
 }
 
 interface Idoso{
-    id: number,
     nome: string,
     data_nascimento: string,
     sexo: string,
@@ -79,7 +78,7 @@ export function DashboardInicial() {
     };
 
     function addPaciente(paciente: Idoso) {
-        const index = selectedUser.findIndex(u => u.id === paciente.id);
+        const index = selectedUser.findIndex(u => u.cpf === paciente.cpf);
         if (index !== -1) {
             const updatedUsers = [...selectedUser];
             updatedUsers.splice(index, 1);
@@ -131,10 +130,10 @@ export function DashboardInicial() {
                 <div className='w-[106vh] mt-5 bg-white shadow-lg'>
                     <div className='w-full h-[6vh] bg-white shadow-md flex items-center'>
                         <div className='flex flex-row justify-start items-center w-full'>
-                            <p className="w-[25vw] text-center border-r">Nome</p>
+                            <p className="w-[17vw] text-center border-r">Nome</p>
                             <p className="w-[5vw] text-center border-r">Sexo</p>
                             <p className="w-[5vw] text-center border-r">Idade</p>
-                            <p className="w-[5vw] text-center border-r">ID</p>
+                            <p className="w-[10vw] text-center border-r">CPF</p>
                             <div className='w-[30%] flex flex-row justify-between items-center rounded-md px-4 py-4'>
                                 <button className='text-[#6B3F97] hover:bg-gray-50 py-3 px-2 items-center flex rounded-full font-semibold'><MdOutlineSort size={24} /></button> 
                                 {selectedUser.length>1&&(<button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold'><FaRegTrashAlt  /></button>)}
@@ -149,18 +148,18 @@ export function DashboardInicial() {
                             <input type='checkbox' onClick={()=>handleSelecionarVarios()} className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/><p>Selecionar Vários</p>
                         </div>
                         {idososList.map((paciente) => (
-                            <div key={paciente.id} className='flex flex-row mt-[1.5vh]'>
-                                <div className="flex flex-row gap-x-4 w-[25vw] text-center border-r pl-4 overflow-hidden items-center">
+                            <div key={paciente.cpf} className='flex flex-row mt-[1.5vh]'>
+                                <div className="flex flex-row gap-x-4 w-[17vw] text-center border-r pl-4 overflow-hidden items-center">
                                     {selecionarVarios&&(<input type='checkbox' className='mr-3 bg-gray-50 border-gray-50 rounded-sm' onClick={()=>addPaciente(paciente)}/>)}
                                     <p className="overflow-hidden whitespace-nowrap text-ellipsis ">{paciente.nome}</p>
                                 </div>
                                 <p className="w-[5vw] text-center border-r">{paciente.sexo}</p>
                                 <p className="w-[5vw] text-center border-r">{calcularIdade(paciente.data_nascimento)}</p>
-                                <p className="w-[5vw] text-center border-r">{paciente.id}</p>
+                                <p className="w-[10vw] text-center border-r">{paciente.cpf}</p>
                                 {selectedUser.length<=1&&
                                 (<div className='flex flex-row w-[25%] justify-end gap-x-5'>
                                     <button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold'><FaRegTrashAlt  /></button>
-                                    <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'> <Link href={`/perfil?id=${paciente.id}`}> Ver Mais </Link></button>
+                                    <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'> <Link href={`/perfil?cpf=${paciente.cpf}`}> Ver Mais </Link></button>
                                 </div>
                                 )}
                             </div>
