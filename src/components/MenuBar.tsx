@@ -68,15 +68,7 @@ export function MenuBar() {
                         </div>
                     </button>
                 </div>
-                <div className='bg-[#D9D9D9] flex items-center p-3 mt-6 mr-6 ml-6 mb-12 rounded-sm'>
-                    <FaRegCircleUser className='text-[#2C2C2C] mr-3' size={24} />
-                    <p className='text-[#2C2C2C]'>Usuário</p>
-                    <div className='flex flex-grow justify-end items-center'>
-                        <Link href='#'>
-                            <MdKeyboardArrowDown className='text-[#2C2C2C]' size={20} />
-                        </Link>
-                    </div>
-                </div>
+
                 <div className='ml-6 mb-6'>
                     <ul className='space-y-8'>
                         <li className='flex items-center'>
