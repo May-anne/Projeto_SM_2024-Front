@@ -1,35 +1,43 @@
-import { FaRegCalendarAlt, FaPlus } from "react-icons/fa";
-import React, { useContext, useEffect, useState } from 'react';
+import { FaRegCalendarAlt, FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import React, { useEffect, useState } from 'react';
 import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
+import { Treino } from "./Treinos";
+import { criarModalidade } from "@/lib/api";
+import Link from "next/link";
 
 interface CardsProps {
     pesquisa: string;
     ehExame: boolean;
     ehTreino: boolean;
+    ehAvaliacao: boolean;
     id: string;
     nome: string;
     data: string;
     info: Treino[] | Avaliacao[] | Exame[] | null;
+    cpf: string | undefined;
 }
 
 interface Exame {
     id: string;
     nome: string;
     data: string;
+    cpf: string;
 }
 
 interface Avaliacao {
     id: string;
     nome: string;
     data: string;
+    cpf: string;
 }
 
 interface Treino {
     id: string;
     nome: string;
     data: string;
+    cpf: string;
 }
 
 interface ModalProps {
@@ -41,6 +49,8 @@ export function SearchBar(props: CardsProps) {
     const [isExameModalOpen, setIsExameModalOpen] = useState(false);
     const [isTreinoModalOpen, setIsTreinoModalOpen] = useState(false);
     const [isAvaliacaoModalOpen, setIsAvaliacaoModalOpen] = useState(false);
+    const [dados, setDados] = useState<Exame[] | Avaliacao[] | Treino[]>([]);
+    const [selectedUser, setSelectedUser] = useState<Exame[] | Avaliacao[] | Treino[]>([]);
 
     const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDataPublicacao(e.target.value);
@@ -51,7 +61,7 @@ export function SearchBar(props: CardsProps) {
             setIsExameModalOpen(true);
         } else if (props.ehTreino) {
             setIsTreinoModalOpen(true);
-        } else {
+        } else if (props.ehAvaliacao) {
             setIsAvaliacaoModalOpen(true);
         }
     };
@@ -60,9 +70,28 @@ export function SearchBar(props: CardsProps) {
         setIsExameModalOpen(false);
     };
 
+    const handleCloseTreino = () => {
+        setIsTreinoModalOpen(false);
+    };
+
     const handleCloseAvaliacao = () => {
         setIsAvaliacaoModalOpen(false);
     };
+
+    useEffect(() => {
+        let termo: 'exame' | 'treino' | 'avaliacao';
+        if (props.ehExame) {
+            termo = 'exame';
+        } else if (props.ehTreino) {
+            termo = 'treino';
+        } else if (props.ehAvaliacao) {
+            termo = 'avaliacao';
+        } else {
+            return;
+        }
+
+        criarModalidade(termo, props.cpf).then(setDados).catch(console.error);
+    }, [props.ehExame, props.ehTreino, props.ehAvaliacao, props.cpf]);
 
     return (
         <>
@@ -75,41 +104,43 @@ export function SearchBar(props: CardsProps) {
                 <button className="h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
                     Buscar
                 </button>
-                {!props.ehExame && (
-                    <button onClick={handlePlusButtonClick} className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569]'>
+                <button onClick={handlePlusButtonClick} className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569]'>
                     <FaPlus className='text-white' size={20} />
-                    </button>
-                )}
+                </button>
                 <div className="flex items-center ml-2">
                     <input
                         id="inputDataPublicacao"
                         type="date"
                         value={dataPublicacao}
                         onChange={handleDataChange}
-                        className="w-10 px-2 py-2 h-6" // Input de data oculto
+                        className="w-10 px-2 py-2 h-6"
                         size={20}
                         required
                         style={{ width: '30px', height: '30px', padding: '5px' }}
                     />
-
-                    </div>
+                </div>
             </div>
             <div className='h-[40vh] w-[50vw] bg-white shadow-2xl rounded-md mb-4'>
                 <div className="w-[50vw] h-[5vh] bg-white shadow-md items-center">
                     <div className='flex flex-row justify-start items-center w-full'>
                         <p className="w-[10vw] text-center border-r">ID</p>
-                        <p className="w-[20vw] text-center border-r">{props.pesquisa}</p>
-                        <p className="w-[15vw] text-center border-r">Data</p>
+                        <p className="w-[15vw] text-center border-r">{props.pesquisa}</p>
+                        <p className="w-[10vw] text-center border-r">Data</p>
                     </div>
                 </div>
                 <div className="overflow-y-auto h-[35vh] mt-6">
-                    {props.info?.map((inf) => (
+                    {dados.map((inf) => (
                         <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
                             <div className='flex flex-row justify-start items-center w-full'>
                                 <p className="w-[10vw] text-center border-r">{inf.id}</p>
-                                <p className="w-[20vw] text-center border-r">{inf.nome}</p>
-                                <p className="w-[15vw] text-center border-r">{inf.data}</p>
+                                <p className="w-[15vw] text-center border-r">{inf.cpf}</p>
+                                <p className="w-[10vw] text-center border-r">{inf.data}</p>
+                                <div className="flex gap-6 items-center mx-8">
+                                    <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2"><FaRegTrashAlt  /></button>
+                                    <button onClick={handlePlusButtonClick} className='text-[#6B3F97] hover:bg-gray-50 py-3 px-2 items-center flex rounded-full font-semibold'>Ver mais</button>
+                                </div>
                             </div>
+                            
                         </div>
                     ))}
                 </div>
@@ -121,7 +152,13 @@ export function SearchBar(props: CardsProps) {
                     </div>
                 </div>
             )}
-
+            {isTreinoModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-transparent p-6 rounded-lg shadow-lg w-[60vw]">
+                        <Treino isOpen={isTreinoModalOpen} onClose={handleCloseTreino} />
+                    </div>
+                </div>
+            )}
             {isAvaliacaoModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-transparent p-6 rounded-lg shadow-lg w-[60vw]">

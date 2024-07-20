@@ -156,6 +156,135 @@ export async function createIdoso(idoso: Idoso) {
   return response;
 }
 
+export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', cpf: string | undefined) {
+  if (!cpf) throw new Error('CPF não fornecido');
+
+  try {
+      const response = await api.get(`/idosos_dados/${termo}/lista/?cpf_idoso=${cpf}`);
+      console.log(response.data);
+      return response.data;
+  } catch (error) {
+      console.error('Erro ao buscar dados:', error);
+      throw error;
+  }
+}
+
+export async function criarExame(cpf: string) {
+  const response = await api.post('forms/exame/upload', {
+    params: {
+      cpf: cpf,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function deletarExame(cpf: string) {
+  const response = await api.delete('/forms/exame/apagar', {
+    params: {
+      cpf: cpf,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getAllExamesbyUser(cpf: string) {
+  const response = await api.get('/forms/exame/listacpf'+cpf, {});
+  console.log(response.data)
+  return response.data;
+}
+
+export async function getAllExames() {
+  const response = await api.get('/forms/exame/lista_geral');
+  console.log(response.data)
+  return response.data;
+}
+
+export async function criarTreino(cpf: string) {
+  const response = await api.post('idosos_dados/treino/criar', {
+    params: {
+      cpf: cpf,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function editarTreino(cpf: string) {
+  const response = await api.put('idosos_dados/treino/', {
+    params: {
+      cpf: cpf,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function deletarTreino(cpf: string) {
+  const response = await api.delete('idosos_dados/treino/', {
+    params: {
+      cpf: cpf,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getAllTreinosbyUser(cpf: string) {
+  const response = await api.get('idosos_dados/treino/listar/'+cpf, {});
+  console.log(response.data)
+  return response.data;
+}
+
+export async function getAllTreinos() {
+  const response = await api.get('idosos_dados/treino/listar/');
+  console.log(response.data)
+  return response.data;
+}
+
+export async function criarAvaliacao(cpf: string) {
+  const response = await api.post('idosos_dados/avaliacao/criar/', {
+    params: {
+      cpf: cpf,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function editarAvaliacao(cpf: string) {
+  const response = await api.put('idosos_dados/avaliacao/', {
+    params: {
+      cpf: cpf,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function deletarAvaliacao(cpf: string) {
+  const response = await api.delete('idosos_dados/avaliacao/', {
+    params: {
+      cpf: cpf,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getAllAvaliacoesbyUser(cpf: string) {
+  const response = await api.get('idosos_dados/avaliacao/listar/'+cpf, {});
+  console.log( response.data)
+  return response.data;
+}
+
+export async function getAllAvaliacoes() {
+  const response = await api.get('idosos_dados/avaliacao/listar/');
+  console.log( response.data)
+  return response.data;
+}
+
 
 export const api = axios.create({
   baseURL: urlBase

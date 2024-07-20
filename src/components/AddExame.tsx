@@ -2,7 +2,8 @@
 import { FaLock } from 'react-icons/fa6';
 import { FaEdit, FaRegTrashAlt,FaFilePdf } from 'react-icons/fa';
 import { ModalDelete } from './ModalDelete';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { criarExame, deletarExame, getAllExamesbyUser } from '@/lib/api';
 
 interface ModalProps {
     isOpen: boolean;
@@ -15,6 +16,8 @@ export function AddExame({ isOpen, onClose }: ModalProps){
     const [nomePaciente, setNomePaciente] = useState('Nome do Paciente');
     const [dataExame, setDataExame] = useState('Data do Exame');
     const [pdfExame, setPdfExame] = useState('pdf');
+    const [cpf, setCpf] = useState('');
+    const [exames, setExames] = useState<any[]>([]);
 
     const handleOpenModal = () => {
       setIsModalOpen(true);
@@ -27,6 +30,43 @@ export function AddExame({ isOpen, onClose }: ModalProps){
     const handleEditClick = () => {
         setIsEditing(true);
     };
+    
+    useEffect(() => {
+        const fetchExames = async () => {
+          try {
+            const data = await getAllExamesbyUser(cpf);
+            setExames(data);
+          } catch (error) {
+            console.error('Erro ao buscar exames:', error);
+          }
+        };
+    
+        fetchExames();
+      }, [cpf]);
+
+    const handleCriarExame = async () => {
+    try {
+        await criarExame(cpf);
+        alert('Exame criado com sucesso!');
+        const data = await getAllExamesbyUser(cpf);
+        setExames(data);
+    } catch (error) {
+        console.error('Erro ao criar exame:', error);
+        alert('Erro ao criar exame. Verifique o console para mais detalhes.');
+    }
+    };
+
+    const handleDeletarExame = async () => {
+        try {
+          await deletarExame(cpf);
+          alert('Exame deletado com sucesso!');
+          const data = await getAllExamesbyUser(cpf);
+          setExames(data);
+        } catch (error) {
+          console.error('Erro ao deletar exame:', error);
+          alert('Erro ao deletar exame. Verifique o console para mais detalhes.');
+        }
+      };
 
     if (!isOpen) return null;
     
@@ -42,7 +82,7 @@ export function AddExame({ isOpen, onClose }: ModalProps){
             <ModalDelete 
                 isOpen={isModalOpen} 
                 onClose={handleCloseModal} 
-                termo="este exame" 
+                termo="este exame"
             />
             <div className='flex justify-start gap-8'>
                 <div className='relative items-center gap-2 mx-8'>
