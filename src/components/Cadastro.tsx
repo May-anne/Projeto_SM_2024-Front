@@ -1,13 +1,10 @@
 "use client"
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { FaLock, FaPlus, FaRegEye } from "react-icons/fa6";
-import { FaRegCalendarAlt } from "react-icons/fa";
 import { HeaderPage } from './Header';
-import { SearchBar } from './SearchBar';
 import cross from '../../public/images/cross.png'
+import { useRouter } from "next/navigation";
+import { createIdoso } from '@/lib/api';
 
 interface Idoso{
     nome: string,
@@ -48,6 +45,8 @@ interface Idoso{
 
 export function Cadastro(){
 
+    const router = useRouter()
+
     const [idosoInfo, setIdosoInfo] = useState<Idoso>({
         nome: '',
         data_nascimento: '',
@@ -55,7 +54,7 @@ export function Cadastro(){
         raca: '',
         escolaridade: '',
         deficiencia: false,
-        deficiencia_quais: '',
+        deficiencia_quais: ',',
         telefone_pessoal: '',
         telefone_emergencial: '',
         endereco: '',
@@ -135,6 +134,12 @@ export function Cadastro(){
 
         console.log(idosoInfo)
     };
+
+    function handleCadastro(idoso: Idoso){
+        createIdoso(idoso).then(()=>{
+            router.push('/dashboard')
+        })
+    }
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const { id, value } = event.target;
@@ -284,7 +289,7 @@ export function Cadastro(){
             <div className='flex flex-col justify-center items-center my-20 z-20 relative'>
                 <div className='bg-[#F8F5FA] shadow-lg rounded-lg h-auto w-[60vw]'>
                     <div className='flex justify-center items-center mt-8 gap-1'>
-                        <h2 className='font-semibold text-2xl text-[#6B3F97]'>Cdastro de Usuário</h2>
+                        <h2 className='font-semibold text-2xl text-[#6B3F97]'>Cadastro de Usuário</h2>
                         <div className='border border-t-2 border-gray-50'></div>
                     </div>
                     <div className='w-full flex flex-row justify-between px-12 mt-8 mb-4'>
@@ -636,6 +641,9 @@ export function Cadastro(){
                                                 </div> 
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className='flex flex-row w-full justify-end py-12'>
+                                        <button className='bg-green-1300 py-2 px-4 justify-center items-center rounded-full hover:opacity-60' onClick={()=>{handleCadastro(idosoInfo)}}>Cadastrar</button>
                                     </div>
                                 </span>
                             </div>

@@ -491,66 +491,65 @@ export function Perfil(){
                                             <div className='p-6'>
                                                 <div className='justify-start grid grid-cols-2 items-start mt-6 gap-y-10'>
 
-                                                        <p className='block text-gray-700 text-sm font-bold'> Onde mora?</p>
-                                                        <div className='flex items-center gap-2'>
-                                                            <select
-                                                                className='shadow appearance-none border rounded w-[15vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                                                                id='onde_moras' value={isValidOption('onde_moras', idosoInfo.onde_moras)} onChange={handleChange}>
-                                                                    <option value='' disabled>Selecione onde mora</option>
-                                                                    {options.onde_moras.map(option => (
-                                                                        <option key={option} value={option}>{option}</option>
-                                                                    ))}
-                                                            </select>
-                                                        </div>
-
-                                                        <p className='block text-gray-700 text-sm font-bold'>Com quem mora?</p>
-                                                        <div className='flex items-center gap-2'>
-                                                            <select
-                                                                className='shadow appearance-none border rounded w-[18vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                                                                id='com_quem_mora' value={isValidOption('com_quem_mora', idosoInfo.com_quem_mora)} onChange={handleChange}>
-                                                                    <option value='' disabled>Selecione com quem mora</option>
-                                                                    {options.com_quem_mora.map(option => (
-                                                                        <option key={option} value={option}>{option}</option>
-                                                                    ))}
-                                                            </select>
-                                                        </div>
-
-                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Quantos residem com você?</p>
-                                                        <div className='flex items-center gap-2'>
-                                                            <select
-                                                                className='shadow appearance-none border rounded w-[18vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                                                                id='quantos_residem' value={isValidOption('quantos_residem', `${idosoInfo.quantos_residem}`)} onChange={handleChange}>
-                                                                <option value='' disabled>Selecione quantos residem</option>
-                                                                {Object.entries(quantosResidemText).map(([value, text]) => (
-                                                                    <option key={value} value={value}>{text}</option>
+                                                    <p className='block text-gray-700 text-sm font-bold'> Onde mora?</p>
+                                                    <div className='flex items-center gap-2'>
+                                                        <select
+                                                            className='shadow appearance-none border rounded w-[15vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                            id='onde_moras' value={isValidOption('onde_moras', idosoInfo.onde_moras)} onChange={handleChange}>
+                                                                <option value='' disabled>Selecione onde mora</option>
+                                                                {options.onde_moras.map(option => (
+                                                                    <option key={option} value={option}>{option}</option>
                                                                 ))}
-                                                            </select>
-                                                        </div>
+                                                        </select>
+                                                    </div>
 
-                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Qual meio de transporte usado para vir ao projeto?</p>
-                                                        <div className='flex items-center gap-2'>
-                                                            <select
-                                                                className='shadow appearance-none border rounded w-[18vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                                                                id='meio_transporte' value={isValidOption('meio_transporte', idosoInfo.meio_transporte)} onChange={handleChange}>
-                                                                    <option value='' disabled>Selecione o meio de transporte</option>
-                                                                    {options.meio_transporte.map(option => (
-                                                                        <option key={option} value={option}>{option}</option>
-                                                                    ))}
-                                                            </select>
-                                                        </div>
+                                                    <p className='block text-gray-700 text-sm font-bold'>Com quem mora?</p>
+                                                    <div className='flex items-center gap-2'>
+                                                        <select
+                                                            className='shadow appearance-none border rounded w-[18vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                            id='com_quem_mora' value={isValidOption('com_quem_mora', idosoInfo.com_quem_mora)} onChange={handleChange}>
+                                                                <option value='' disabled>Selecione com quem mora</option>
+                                                                {options.com_quem_mora.map(option => (
+                                                                    <option key={option} value={option}>{option}</option>
+                                                                ))}
+                                                        </select>
+                                                    </div>
 
-                                                        <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Qual a sua situação econômica?</p>
-                                                        <div className='flex items-center gap-2'>
-                                                            <select
-                                                                className='shadow appearance-none border rounded w-[18vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                                                                id='situacao_economica' value={isValidOption('situacao_economica', idosoInfo.situacao_economica)} onChange={handleChange}>
-                                                                    <option value='' disabled>Selecione a situação econômica</option>
-                                                                    {options.situacao_economica.map(option => (
-                                                                        <option key={option} value={option}>{option}</option>
-                                                                    ))}
-                                                            </select>
-                                                        </div>
+                                                    <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Quantos residem com você?</p>
+                                                    <div className='flex items-center gap-2'>
+                                                        <select
+                                                            className='shadow appearance-none border rounded w-[18vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                            id='quantos_residem' value={isValidOption('quantos_residem', `${idosoInfo.quantos_residem}`)} onChange={handleChange}>
+                                                            <option value='' disabled>Selecione quantos residem</option>
+                                                            {Object.entries(quantosResidemText).map(([value, text]) => (
+                                                                <option key={value} value={value}>{text}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
 
+                                                    <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Qual meio de transporte usado para vir ao projeto?</p>
+                                                    <div className='flex items-center gap-2'>
+                                                        <select
+                                                            className='shadow appearance-none border rounded w-[18vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                            id='meio_transporte' value={isValidOption('meio_transporte', idosoInfo.meio_transporte)} onChange={handleChange}>
+                                                                <option value='' disabled>Selecione o meio de transporte</option>
+                                                                {options.meio_transporte.map(option => (
+                                                                    <option key={option} value={option}>{option}</option>
+                                                                ))}
+                                                        </select>
+                                                    </div>
+
+                                                    <p className='block text-gray-700 text-sm font-bold w-[12vw]'>Qual a sua situação econômica?</p>
+                                                    <div className='flex items-center gap-2'>
+                                                        <select
+                                                            className='shadow appearance-none border rounded w-[18vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                                                            id='situacao_economica' value={isValidOption('situacao_economica', idosoInfo.situacao_economica)} onChange={handleChange}>
+                                                                <option value='' disabled>Selecione a situação econômica</option>
+                                                                {options.situacao_economica.map(option => (
+                                                                    <option key={option} value={option}>{option}</option>
+                                                                ))}
+                                                        </select>
+                                                    </div>
                                                 </div> 
                                             </div>
                                         </div>
