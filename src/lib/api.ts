@@ -156,7 +156,7 @@ export async function createIdoso(idoso: Idoso) {
   return response;
 }
 
-export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', cpf: string | undefined) {
+export async function mostrarModalidade(termo: 'exame' | 'treino' | 'avaliacao', cpf: string | undefined) {
   if (!cpf) throw new Error('CPF não fornecido');
 
   try {
@@ -164,19 +164,21 @@ export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', c
       console.log(response.data);
       return response.data;
   } catch (error) {
-      console.error('Erro ao buscar dados:', error);
+      console.error(`Erro ao mostrar ${termo}:`, error);
       throw error;
   }
 }
 
-export async function criarExame(cpf: string) {
-  const response = await api.post('forms/exame/upload', {
-    params: {
-      cpf: cpf,
-    },
-  });
-  console.log(response.data);
-  return response.data;
+export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', cpf: string | undefined) {
+  if (!cpf) throw new Error('CPF não fornecido');
+  try {
+      const response = await api.post(`/idosos_dados/${termo}/criar/`);
+      console.log(response.data);
+      return response.data;
+  } catch (error) {
+      console.error(`Erro ao criar ${termo}:`, error);
+      throw error;
+  }
 }
 
 export async function deletarExame(cpf: string) {
@@ -198,16 +200,6 @@ export async function getAllExamesbyUser(cpf: string) {
 export async function getAllExames() {
   const response = await api.get('/forms/exame/lista_geral');
   console.log(response.data)
-  return response.data;
-}
-
-export async function criarTreino(cpf: string) {
-  const response = await api.post('idosos_dados/treino/criar', {
-    params: {
-      cpf: cpf,
-    },
-  });
-  console.log(response.data);
   return response.data;
 }
 
@@ -240,16 +232,6 @@ export async function getAllTreinosbyUser(cpf: string) {
 export async function getAllTreinos() {
   const response = await api.get('idosos_dados/treino/listar/');
   console.log(response.data)
-  return response.data;
-}
-
-export async function criarAvaliacao(cpf: string) {
-  const response = await api.post('idosos_dados/avaliacao/criar/', {
-    params: {
-      cpf: cpf,
-    },
-  });
-  console.log(response.data);
   return response.data;
 }
 
