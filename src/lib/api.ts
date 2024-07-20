@@ -57,15 +57,21 @@ export async function getIdosos() {
   return response.data;
 }
 
-export async function getIdoso(id: string) {
-  const response = await api.get('idosos_dados/'+id, {});
+export async function getIdoso(cpf: string) {
+  const response = await api.get('idosos_dados/'+cpf, {});
+  console.log( response.data)
+  return response.data;
+}
+
+export async function apagarIdoso(cpf: string) {
+  const response = await api.delete('idosos_dados/'+cpf, {});
   console.log( response.data)
   return response.data;
 }
 
 export async function updateIdoso(idoso: Idoso) {
   try {
-    const response = await api.put(`/idosos_dados/${idoso.cpf}/`, {
+    const response = await api.put(`idosos_dados/${idoso.cpf}/`, {
       nome: idoso.nome,
       data_nascimento: idoso.data_nascimento,
       sexo: idoso.sexo,
@@ -107,6 +113,47 @@ export async function updateIdoso(idoso: Idoso) {
     console.error('Error updating program:', error);
     throw error;
   }
+}
+
+export async function createIdoso(idoso: Idoso) {
+  const response = await api.post('idosos_dados/cadastrar/', {
+      nome: idoso.nome,
+      data_nascimento: idoso.data_nascimento,
+      sexo: idoso.sexo,
+      raca: idoso.raca,
+      escolaridade: idoso.escolaridade,
+      deficiencia: idoso.deficiencia,
+      deficiencia_quais: idoso.deficiencia_quais,
+      telefone_pessoal: idoso.telefone_pessoal,
+      telefone_emergencial: idoso.telefone_emergencial,
+      endereco: idoso.endereco,
+      bairro: idoso.bairro,
+      cep: idoso.cep,
+      rg: idoso.rg,
+      cpf: idoso.cpf,
+      cartao_cns: idoso.cartao_cns,
+      plano_saude: idoso.plano_saude,
+      plano_saude_qual: idoso.plano_saude_qual,
+      onde_moras: idoso.onde_moras,
+      com_quem_mora: idoso.com_quem_mora,
+      quantos_residem: idoso.quantos_residem,
+      meio_transporte: idoso.meio_transporte,
+      situacao_economica: idoso.situacao_economica,
+      renda: idoso.renda,
+      problemas_saude: idoso.problemas_saude,
+      problemas_saude_quais: idoso.problemas_saude_quais,
+      cirgurgia_recente: idoso.cirgurgia_recente,
+      cirurgia_quais: idoso.cirurgia_quais,
+      internacao_recente: idoso.internacao_recente,
+      internacao_quais: idoso.internacao_quais,
+      alcool: idoso.alcool,
+      fumante: idoso.fumante,
+      drogas: idoso.drogas,
+      medicamentos: idoso.medicamentos,
+      medicamentos_quais: idoso.medicamentos_quais,
+  });
+
+  return response;
 }
 
 

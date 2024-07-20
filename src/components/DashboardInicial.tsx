@@ -9,7 +9,7 @@ import { FaPlus } from 'react-icons/fa6';
 import Filtro from './Filtro';
 import router from 'next/router';
 import { parseCookies } from 'nookies';
-import { getIdosos } from '@/lib/api';
+import { apagarIdoso, getIdosos } from '@/lib/api';
 
 
 interface Usuario{
@@ -109,6 +109,34 @@ export function DashboardInicial() {
         return idade;
     }
 
+    function apagarUmIdoso(cpf: string) {
+        apagarIdoso(cpf)
+        setIdososList(prevList => prevList.filter(idoso => idoso.cpf !== cpf));
+    }
+
+    function apagarVariosIdosos(pacientes: Idoso[]) {
+        const cpfs = pacientes.map(paciente => paciente.cpf);
+        for(let i=0; i<cpfs.length; i++){
+            apagarIdoso(cpfs[i])
+        }
+        setIdososList(prevList => prevList.filter(idoso => !cpfs.includes(idoso.cpf)));
+    }
+
+    function handleApagarIdoso(paciente: Idoso) {
+        if (selectedUser.length > 1) {
+            if (confirm(`Deseja apagar os pacientes selecionados?`) == true) {
+                apagarVariosIdosos(selectedUser);
+                setSelectedUser([]);
+                alert("Usuários removidos!");
+            }
+        } else {
+            if (confirm(`Deseja apagar o paciente: "${paciente.nome}" de cpf: "${paciente.cpf}"?`) == true) {
+                apagarUmIdoso(paciente.cpf);
+                alert("Usuário removido!");
+            }
+        }
+    }
+
     return (
         <>
         <div className='h-[100vh] w-[100vw] bg-[#eae3ef]'>
@@ -136,7 +164,7 @@ export function DashboardInicial() {
                             <p className="w-[10vw] text-center border-r">CPF</p>
                             <div className='w-[30%] flex flex-row justify-between items-center rounded-md px-4 py-4'>
                                 <button className='text-[#6B3F97] hover:bg-gray-50 py-3 px-2 items-center flex rounded-full font-semibold'><MdOutlineSort size={24} /></button> 
-                                {selectedUser.length>1&&(<button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold'><FaRegTrashAlt  /></button>)}
+                                {selectedUser.length>1&&(<button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold' onClick={() => handleApagarIdoso(selectedUser[0])}><FaRegTrashAlt  /></button>)}
                             </div>
                         </div>
                     </div>
@@ -158,7 +186,7 @@ export function DashboardInicial() {
                                 <p className="w-[10vw] text-center border-r">{paciente.cpf}</p>
                                 {selectedUser.length<=1&&
                                 (<div className='flex flex-row w-[25%] justify-end gap-x-5'>
-                                    <button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold'><FaRegTrashAlt  /></button>
+                                    <button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold' onClick={()=>{handleApagarIdoso(paciente)}}><FaRegTrashAlt  /></button>
                                     <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'> <Link href={`/perfil?cpf=${paciente.cpf}`}> Ver Mais </Link></button>
                                 </div>
                                 )}
