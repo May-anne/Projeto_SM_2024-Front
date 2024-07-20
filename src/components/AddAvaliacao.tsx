@@ -4,7 +4,7 @@ import { FaLock } from 'react-icons/fa6';
 import { FaEdit, FaRegTrashAlt,FaFilePdf } from 'react-icons/fa';
 import { ModalDelete } from './ModalDelete';
 import { useEffect, useState } from 'react';
-import { criarAvaliacao, editarAvaliacao} from '@/lib/api';
+import { criarModalidade } from '@/lib/api';
 
 interface ModalProps {
     avaliacao: any;
@@ -18,21 +18,37 @@ export function AddAvaliacao(props: ModalProps){
     const [cpf, setCpf] = useState('');
     const [AvaliacaoInfo, setAvaliacao] = useState({
         id: 0,
-        nome: '',
-        data_nascimento: '',
+        nome: "",
+        cpf_idoso: "",
+        data: "",
         peso: 0,
         estatura: 0,
-        marcha: 0,
-        cintura: 0,
-        quadril: 0,
-        panturrilha: 0,
-        esquerdo1: 0,
-        esquerdo2: 0,
-        direito1: 0,
-        direito2: 0,
-        tug1: 0,
-        tug2: 0,
+        marcha6: 0,
+        per_cintura: 0,
+        per_quadril: 0,
+        per_panturrilha: 0,
+        hg_esquerda1: 0,
+        hg_esquerda2: 0,
+        hg_direita1: 0,
+        hg_direita2: 0,
+        ir_vir1: 0,
+        ir_vir2: 0,
     })
+
+    const fieldTitles: { [key: string]: string } = {
+        peso: "Peso (kg)",
+        estatura: "Estatura (m)",
+        per_cintura: "Cintura",
+        per_quadril: "Quadril",
+        per_panturrilha: "Panturrilha",
+        marcha6: "Marcha (s)",
+        hg_direita1: "Handgrip direito 1",
+        hg_direita2: "Handgrip direito 2",
+        hg_esquerda1: "Handgrip esquerdo 1",
+        hg_esquerda2: "Handgrip esquerdo 2",
+        ir_vir1: "TUG 1",
+        ir_vir2: "TUG 2",
+      };
 
     const handleChange = (e:any) => {
         const { name, value } = e.target;
@@ -46,31 +62,9 @@ export function AddAvaliacao(props: ModalProps){
         setAvaliacao(props.avaliacao);
     }, [props.avaliacao]);
 
-    useEffect(() => {
-        const fetchExames = async () => {
-          try {
-            const data = await criarAvaliacao(cpf);
-            setAvaliacao(data);
-          } catch (error) {
-            console.error('Erro ao criar avaliação', error);
-          }
-        };
-    
-        fetchExames();
-      }, [cpf]);
-
-      useEffect(() => {
-        const fetchExames = async () => {
-          try {
-            const data = await editarAvaliacao(cpf);
-            setAvaliacao(data);
-          } catch (error) {
-            console.error('Erro ao editar avaliação', error);
-          }
-        };
-    
-        fetchExames();
-      }, [cpf]);
+    const createAvaliacao = () => {
+        criarModalidade('avaliacao', AvaliacaoInfo.cpf_idoso).then(setAvaliacao).catch(console.error);
+    };
 
     const handleOpenModal = () => {
       setIsModalOpen(true);
@@ -153,15 +147,15 @@ export function AddAvaliacao(props: ModalProps){
                                     <input
                                         className='shadow appearance-none border rounded w-[10vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                         id='data' type='date'
-                                        value={AvaliacaoInfo.data_nascimento}
+                                        value={AvaliacaoInfo.data}
                                         onChange={handleChange}
                                         />
                                 </div>
                             </div>
                             <div className='grid grid-cols-3 gap-8 mx-8 my-5'>
-                            {['peso', 'estatura', 'marcha'].map((field) => (
+                            {['peso', 'estatura', 'marcha6'].map((field) => (
                                     <div key={field} className="items-center gap-2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)} (kg)</label>
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={field}> {fieldTitles[field]}</label>
                                         <input
                                             className="shadow appearance-none border rounded w-[7vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             id={field} type="number"
@@ -172,9 +166,9 @@ export function AddAvaliacao(props: ModalProps){
                                 ))}
                             </div>
                             <div className='grid grid-cols-3  ml-8'>
-                                {['cintura', 'quadril', 'panturrilha'].map((field) => (
+                                {['per_cintura', 'per_quadril', 'per_panturrilha'].map((field) => (
                                         <div key={field} className="items-center gap-2">
-                                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={field}>Perímetro da {field} (cm)</label>
+                                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={field}>Perímetro {fieldTitles[field]} (cm)</label>
                                             <input
                                                 className="shadow appearance-none border rounded w-[7vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                                 id={field} type="number"
@@ -185,9 +179,9 @@ export function AddAvaliacao(props: ModalProps){
                                     ))}
                             </div>
                                 <div className='grid grid-cols-4 gap-8 mx-8 mt-5'>
-                                {['direito1', 'esquerdo1', 'direito2', 'esquerdo2'].map((field) => (
+                                {['hg_direita1', 'hg_esquerda1', 'hg_direita2', 'hg_esquerda2'].map((field) => (
                                     <div key={field} className="items-center gap-2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={field}>Handgrip {field.charAt(0).toUpperCase() + field.slice(1, field.length - 1)} {field.charAt(field.length - 1)} (kgf)</label>
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={field}>{fieldTitles[field]}  (kgf)</label>
                                         <input
                                             className="shadow appearance-none border rounded w-[7vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             id={field} type="number"
@@ -198,7 +192,7 @@ export function AddAvaliacao(props: ModalProps){
                                 ))}
                                 </div>
                                 <div className='grid grid-cols-3 ml-8 mt-5'>
-                                    {['tug1', 'tug2'].map((field) => (
+                                    {['ir_vir1', 'ir_vir2'].map((field) => (
                                         <div key={field} className="items-center gap-2">
                                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={field}>TUG {field.charAt(field.length - 1)} (segundos)</label>
                                             <input
@@ -211,7 +205,7 @@ export function AddAvaliacao(props: ModalProps){
                                     ))}
                                 </div>
                             <div className='flex justify-end gap-8 mx-8 my-8'>
-                                <button onClick={()=>{setShowModal(false)}} className='border-2 text-lg border-[#6B3F97] bg-[#6B3F97] hover:border-[#4A2569] hover:bg-[#4A2569] px-4 py-1 rounded-md text-white font-semibold'>Salvar</button>
+                                <button onClick={()=>{createAvaliacao()}} className='border-2 text-lg border-[#6B3F97] bg-[#6B3F97] hover:border-[#4A2569] hover:bg-[#4A2569] px-4 py-1 rounded-md text-white font-semibold'>Salvar</button>
                                 <button onClick={()=>{setShowModal(false)}} className='border-2 text-lg border-[#9387AB] bg-transparent hover:border-[#4A2569] hover:text-[#4A2569] px-4 py-1 rounded-md text-[#9387AB] font-semibold'>Voltar</button>
                             </div>
                         </div>
