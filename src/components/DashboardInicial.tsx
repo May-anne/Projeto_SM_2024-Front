@@ -9,6 +9,7 @@ import Filtro from './Filtro';
 import { apagarIdoso, getIdosos } from '@/lib/api';
 import { FaSearch } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { Divide } from 'lucide-react';
 
 interface Idoso{
     nome: string,
@@ -171,11 +172,11 @@ export function DashboardInicial() {
                     
                     <div className='border-t-2 bg-gray-50'/>
                     
-                    <div className='grid grid-cols-2 gap-x-2 lg:gap-x-0 lg:grid-rows-5 lg:grid-cols-none pb-5 px-2 lg:px-0 h-[60vh] lg:h-[25vh] overflow-scroll w-[100vw] lg:w-full'>
+                    <div className='items-center justify-center lg:justify-start grid grid-cols-2 gap-x-2 lg:gap-x-0 lg:grid-rows-5 lg:grid-cols-none pb-5 px-2 lg:px-0 h-[60vh] lg:h-[25vh] overflow-scroll w-[100vw] lg:w-full'>
                         <div className='flex flex-row py-4 lg:py-0 px-2 lg:p-4 items-center text-sm italic w-full'>
                             <input type='checkbox' onClick={()=>handleSelecionarVarios()} className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/><p>Selecionar Vários</p>
                         </div>
-                        <div className='flex lg:hidden'/>
+                        {selectedUser.length>1?(<button className='bg-red-1100 w-10 h-10 justify-center hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold lg:hidden' onClick={() => handleApagarIdoso(selectedUser[0])}><FaRegTrashAlt  /></button>):(<div className='lg:hidden'/>)}
                         {idososList.map((paciente) => (
                             <>
                                 <div key={paciente.cpf} className='hidden lg:flex flex-row mt-[1.5vh]'>
