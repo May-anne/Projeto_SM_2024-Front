@@ -6,7 +6,6 @@ import { HeaderPage } from './Header';
 import { MdFilterAlt } from 'react-icons/md';
 import { GoSingleSelect } from "react-icons/go";
 import { SearchBar } from './SearchBar';
-import { Exames } from './AddExame';
 
 interface Exame{
     id: string;

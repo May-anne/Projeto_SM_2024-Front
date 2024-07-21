@@ -315,12 +315,12 @@ export function Perfil(){
     
     return(
         
-        <div className='bg-[#D8C9E0] h-auto w-[100vw] overflow-y-auto'>
+        <div className='bg-[#D8C9E0] h-auto w-[100vw]'>
             <HeaderPage/>
             <div className='w-[100%] h-[100%] absolute z-10 flex flex-col justify-between my-20 gap-y-16'>
                 {renderCrossImages()}
             </div>
-            <div className='flex flex-col justify-center items-center mt-20 z-20 relative'>
+            <div className='flex flex-col justify-center items-center pt-20 z-20 relative'>
                 <div className='bg-[#F8F5FA] shadow-lg rounded-lg h-auto w-[60vw]'>
                     <div className='w-full grid grid-cols-3 justify-center items-center mt-8 gap-1 px-[4vw]'>
                         <Link href={'/dashboard'} className='text-sm font-bold hover:opacity-60'>{'< Voltar'}</Link>
