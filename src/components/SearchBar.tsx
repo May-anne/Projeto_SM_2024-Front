@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
-import { Treino } from "./Treinos";
 import { criarModalidade, deletarAvaliacao, deletarModalidade, mostrarModalidade } from "@/lib/api";
 import Link from "next/link";
 
@@ -110,7 +109,7 @@ export function SearchBar(props: CardsProps) {
                     Buscar
                 </button>
                     {props.ehExame&&<AddAvaliacao avaliacao={dadosExame} cpf={props.cpf} nome={props.nome} editar={false}/>}
-                    {props.ehTreino&&<AddAvaliacao avaliacao={dadosTreino} cpf={props.cpf} nome={props.nome}  editar={false}/>}
+                    {props.ehTreino&&<AddTreino avaliacao={dadosTreino} cpf={props.cpf} nome={props.nome}  editar={false}/>}
                     {props.ehAvaliacao&&<AddAvaliacao avaliacao={dadosAvaliacao} cpf={props.cpf} nome={props.nome}  editar={false}/>}
                 <div className="flex items-center ml-2">
                     <input

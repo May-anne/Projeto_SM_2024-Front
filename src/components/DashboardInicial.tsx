@@ -172,7 +172,7 @@ export function DashboardInicial() {
                     
                     <div className='border-t-2 bg-gray-50'/>
                     
-                    <div className='items-center justify-center lg:justify-start grid grid-cols-2 gap-x-2 lg:gap-x-0 lg:grid-rows-5 lg:grid-cols-none pb-5 px-2 lg:px-0 h-[60vh] lg:h-[25vh] overflow-scroll w-[100vw] lg:w-full'>
+                    <div className='items-center lg:items-stretch grid grid-cols-2 gap-x-2 lg:gap-x-0 lg:grid-rows-5 lg:grid-cols-none pb-5 px-2 lg:px-0 h-full lg:h-[25vh] overflow-scroll w-[100vw] lg:w-full'>
                         <div className='flex flex-row py-4 lg:py-0 px-2 lg:p-4 items-center text-sm italic w-full'>
                             <input type='checkbox' onClick={()=>handleSelecionarVarios()} className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/><p>Selecionar Vários</p>
                         </div>
