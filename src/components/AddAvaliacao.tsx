@@ -4,10 +4,12 @@ import { FaLock } from 'react-icons/fa6';
 import { FaEdit, FaRegTrashAlt,FaFilePdf } from 'react-icons/fa';
 import { ModalDelete } from './ModalDelete';
 import { useEffect, useState } from 'react';
-import { criarModalidade } from '@/lib/api';
+import { criarModalidade, deletarModalidade } from '@/lib/api';
 
 interface ModalProps {
     avaliacao: any;
+    nome: string;
+    cpf: string | undefined;
     editar: boolean
 }
 
@@ -15,24 +17,23 @@ export function AddAvaliacao(props: ModalProps){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [editing, setIsEditing] = useState(false);
-    const [cpf, setCpf] = useState('');
     const [AvaliacaoInfo, setAvaliacao] = useState({
         id: 0,
         nome: "",
-        cpf_idoso: "",
+        cpf_idoso: props.cpf,
         data: "",
-        peso: 0,
-        estatura: 0,
-        marcha6: 0,
-        per_cintura: 0,
-        per_quadril: 0,
-        per_panturrilha: 0,
-        hg_esquerda1: 0,
-        hg_esquerda2: 0,
-        hg_direita1: 0,
-        hg_direita2: 0,
-        ir_vir1: 0,
-        ir_vir2: 0,
+        peso: "",
+        estatura: "",
+        marcha6: "",
+        per_cintura: "",
+        per_quadril:"",
+        per_panturrilha:"",
+        hg_esquerda1:"",
+        hg_esquerda2: "",
+        hg_direita1:"",
+        hg_direita2:"",
+        ir_vir1: "",
+        ir_vir2: "",
     })
 
     const fieldTitles: { [key: string]: string } = {
@@ -59,12 +60,14 @@ export function AddAvaliacao(props: ModalProps){
     };
 
     useEffect(() => {
-        setAvaliacao(props.avaliacao);
-    }, [props.avaliacao]);
+        setAvaliacao(prevState => ({
+            ...prevState,
+            ...props.avaliacao,
+            cpf_idoso: props.cpf,
+            nome: props.nome
+        }));
+    }, [props.avaliacao, props.cpf, props.nome]);
 
-    const createAvaliacao = () => {
-        criarModalidade('avaliacao', AvaliacaoInfo.cpf_idoso).then(setAvaliacao).catch(console.error);
-    };
 
     const handleOpenModal = () => {
       setIsModalOpen(true);
@@ -80,8 +83,34 @@ export function AddAvaliacao(props: ModalProps){
 
     function resetModal(){
         setShowModal(true)
-      }
     
+    }
+
+    function deleteAvaliacao() {
+        if (!AvaliacaoInfo.cpf_idoso) {
+            console.error("CPF não fornecido");
+            return;
+        }
+        deletarModalidade('avaliacao', AvaliacaoInfo)
+            .then(() => {
+                console.log("Avaliação deletada com sucesso");
+            })
+            .catch(console.error);
+        console.log(AvaliacaoInfo);
+    }
+
+    function createAvaliacao() {
+        if (!AvaliacaoInfo.cpf_idoso) {
+            console.error("CPF não fornecidooo");
+            return;
+        }
+        criarModalidade('avaliacao', AvaliacaoInfo)
+            .then((response) => {
+                setAvaliacao(response);
+            })
+            .catch(console.error);
+        console.log(AvaliacaoInfo);
+    }
     return (
 
         <>
@@ -115,7 +144,8 @@ export function AddAvaliacao(props: ModalProps){
                             <ModalDelete 
                                 isOpen={isModalOpen} 
                                 onClose={handleCloseModal} 
-                                termo="esta avaliação" 
+                                termo="esta avaliação"
+                                id={AvaliacaoInfo.id}
                             />
                             <div className='grid grid-cols-3 ml-8'>
                                 <div className='items-center gap-2'>
@@ -126,6 +156,7 @@ export function AddAvaliacao(props: ModalProps){
                                         <input
                                             className='shadow bg-gray-100 appearance-none border rounded w-[10vw] py-1 px-4 pl-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                             id='id' type='number'  defaultValue={AvaliacaoInfo.id} readOnly
+                                            name="id"
                                         />
                                         <FaLock className='absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500' size={16} />
                                     </div>
@@ -138,6 +169,7 @@ export function AddAvaliacao(props: ModalProps){
                                         className='shadow appearance-none border rounded w-[20vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                                         value={AvaliacaoInfo.nome}
                                         onChange={handleChange}
+                                        name="nome"
                                         />
                                 </div>
                                 <div className='items-center gap-2'>
@@ -149,6 +181,7 @@ export function AddAvaliacao(props: ModalProps){
                                         id='data' type='date'
                                         value={AvaliacaoInfo.data}
                                         onChange={handleChange}
+                                        name="data"
                                         />
                                 </div>
                             </div>
@@ -161,6 +194,7 @@ export function AddAvaliacao(props: ModalProps){
                                             id={field} type="number"
                                             value={(AvaliacaoInfo as any)[field]}
                                             onChange={handleChange}
+                                            name={field}
                                         />
                                     </div>
                                 ))}
@@ -174,6 +208,7 @@ export function AddAvaliacao(props: ModalProps){
                                                 id={field} type="number"
                                                 value={(AvaliacaoInfo as any)[field]}
                                                 onChange={handleChange}
+                                                name={field}
                                             />
                                         </div>
                                     ))}
@@ -187,6 +222,7 @@ export function AddAvaliacao(props: ModalProps){
                                             id={field} type="number"
                                             value={(AvaliacaoInfo as any)[field]}
                                             onChange={handleChange}
+                                            name={field}
                                         />
                                     </div>
                                 ))}
@@ -200,6 +236,7 @@ export function AddAvaliacao(props: ModalProps){
                                                 id={field} type="number"
                                                 value={(AvaliacaoInfo as any)[field]}
                                                 onChange={handleChange}
+                                                name={field}
                                             />
                                         </div>
                                     ))}

@@ -4,7 +4,7 @@ import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
 import { Treino } from "./Treinos";
-import { criarModalidade, mostrarModalidade } from "@/lib/api";
+import { criarModalidade, deletarAvaliacao, deletarModalidade, mostrarModalidade } from "@/lib/api";
 import Link from "next/link";
 
 interface CardsProps {
@@ -13,10 +13,11 @@ interface CardsProps {
     ehTreino: boolean;
     ehAvaliacao: boolean;
     cpf: string | undefined;
+    nome: string;
 }
 
 interface Exame {
-    id: string;
+    id: number;
     nome: string;
     data: string;
     cpf: string;
@@ -42,7 +43,7 @@ interface Avaliacao {
 }
 
 interface Treino {
-    id: string;
+    id: number;
     nome: string;
     data: string;
     cpf: string;
@@ -80,22 +81,22 @@ export function SearchBar(props: CardsProps) {
 
     }, [props.ehExame, props.ehTreino, props.ehAvaliacao, props.cpf]);
 
-    useEffect(() => {
-        let termo: 'exame' | 'treino' | 'avaliacao';
-        if (props.ehExame) {
-            termo = 'exame';
-            criarModalidade(termo, props.cpf).then(setDadosExame).catch(console.error);
-        } else if (props.ehTreino) {
-            termo = 'treino';
-            criarModalidade(termo, props.cpf).then(setDadosTreino).catch(console.error);
-        } else if (props.ehAvaliacao) {
-            termo = 'avaliacao';
-            criarModalidade(termo, props.cpf).then(setDadosAvaliacao).catch(console.error);
-        } else {
+    function deleteAvaliacao(inf : any) {
+        // Ensure 'inf' contains the necessary properties
+        if (!inf.id || !inf.cpf_idoso) {
+            console.error('CPF não fornecido ou ID não fornecido');
             return;
         }
-
-    }, [props.ehExame, props.ehTreino, props.ehAvaliacao, props.cpf]);
+    
+        // Pass the entire 'inf' object to 'deletarModalidade' to ensure 'cpf_idoso' is included
+        deletarModalidade('avaliacao', inf)
+            .then(() => {
+                console.log("Avaliação deletada com sucesso");
+            })
+            .catch(console.error);
+    
+        console.log(inf);
+    }
 
     return (
         <>
@@ -108,9 +109,9 @@ export function SearchBar(props: CardsProps) {
                 <button className="h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
                     Buscar
                 </button>
-                    {props.ehExame&&<AddAvaliacao avaliacao={dadosExame} editar={false}/>}
-                    {props.ehTreino&&<AddAvaliacao avaliacao={dadosTreino} editar={false}/>}
-                    {props.ehAvaliacao&&<AddAvaliacao avaliacao={dadosAvaliacao} editar={false}/>}
+                    {props.ehExame&&<AddAvaliacao avaliacao={dadosExame} cpf={props.cpf} nome={props.nome} editar={false}/>}
+                    {props.ehTreino&&<AddAvaliacao avaliacao={dadosTreino} cpf={props.cpf} nome={props.nome}  editar={false}/>}
+                    {props.ehAvaliacao&&<AddAvaliacao avaliacao={dadosAvaliacao} cpf={props.cpf} nome={props.nome}  editar={false}/>}
                 <div className="flex items-center ml-2">
                     <input
                         id="inputDataPublicacao"
@@ -145,7 +146,7 @@ export function SearchBar(props: CardsProps) {
                                         <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
-                                        <AddAvaliacao avaliacao={null} editar={true} />
+                                        <AddAvaliacao avaliacao={null} cpf={props.cpf} nome={props.nome}  editar={true} />
                                     </div>
                                 </div>
                             </div>
@@ -163,7 +164,7 @@ export function SearchBar(props: CardsProps) {
                                         <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
-                                        <AddAvaliacao avaliacao={inf} editar={true} />
+                                        <AddAvaliacao avaliacao={inf} nome= {props.nome} cpf={props.cpf} editar={true} />
                                     </div>
                                 </div>
                             </div>
@@ -178,10 +179,10 @@ export function SearchBar(props: CardsProps) {
                                     <p className="w-[15vw] text-center border-r">{inf.nome}</p>
                                     <p className="w-[10vw] text-center border-r">{inf.data}</p>
                                     <div className="flex gap-6 items-center mx-8">
-                                        <button onClick={() => {console.log(inf)}} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
+                                        <button onClick={() => deleteAvaliacao(inf)} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
-                                        <AddAvaliacao avaliacao={inf} editar={true} />
+                                        <AddAvaliacao avaliacao={inf} cpf={props.cpf} nome={props.nome}  editar={true} />
                                     </div>
                                 </div>
                             </div>

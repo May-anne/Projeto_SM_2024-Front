@@ -169,10 +169,10 @@ export async function mostrarModalidade(termo: 'exame' | 'treino' | 'avaliacao',
   }
 }
 
-export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', cpf: string | undefined) {
-  if (!cpf) throw new Error('CPF não fornecido');
+export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', modo: any) {
+  if (!modo.cpf_idoso) throw new Error('CPF não fornecido');
   try {
-      const response = await api.post(`/idosos_dados/${termo}/criar/`);
+      const response = await api.post(`/idosos_dados/${termo}/criar/`, modo);
       console.log(response.data);
       return response.data;
   } catch (error) {
@@ -180,6 +180,18 @@ export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', c
       throw error;
   }
 }
+
+export async function deletarModalidade(termo: 'exame' | 'treino' | 'avaliacao', modo: any) {
+  try {
+      const response = await axios.delete(`/idosos_dados/${termo}/${modo.id}`, {
+          data: modo // Ensure the request body includes 'modo'
+      });
+      console.log(`${termo} deletada(o) com sucesso:`, response.data);
+  } catch (error) {
+      console.error(`Erro ao deletar ${termo}`, error);
+  }
+}
+
 
 export async function deletarExame(cpf: string) {
   const response = await api.delete('/forms/exame/apagar', {

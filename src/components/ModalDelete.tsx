@@ -3,14 +3,25 @@ import { FiUsers } from 'react-icons/fi';
 import {HeaderPage} from './Header'
 import { FaLock } from 'react-icons/fa6';
 import { FaEdit, FaRegTrashAlt } from 'react-icons/fa';
+import { deletarModalidade } from '@/lib/api';
 
 interface ModalProps {
     onClose: () => void;
     termo: string;
     isOpen: boolean;
+    id: number;
 }
 
-export function ModalDelete({ isOpen, onClose, termo }: ModalProps) {
+function deleteAvaliacao(id : number) {
+    deletarModalidade('avaliacao', id)
+        .then(() => {
+            console.log("Avaliação deletada com sucesso");
+        })
+        .catch(console.error);
+    console.log(id);
+}
+
+export function ModalDelete({ isOpen, onClose, termo, id }: ModalProps) {
     if (!isOpen) return null;
 
     return (
@@ -26,8 +37,13 @@ export function ModalDelete({ isOpen, onClose, termo }: ModalProps) {
                     <button 
                         className='rounded-lg shadow-md border-2 border-green-700 hover:border-green-900 px-3 py-2 bg-green-700 text-white hover:bg-green-900'
                         onClick={() => {
-                            // Adicione sua lógica de exclusão aqui
-                            onClose(); // Fecha o modal após a exclusão
+                            if(termo == 'avaliacao'){
+                                deleteAvaliacao(id);
+                            } else if(termo == 'treino'){
+                                //deleteAvaliacao(id);
+                            } else{
+                                //deleteAvaliacao(id);
+                            }
                         }}
                     >
                         Confirmar

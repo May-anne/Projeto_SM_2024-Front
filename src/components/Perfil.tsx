@@ -695,20 +695,20 @@ export function Perfil(){
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Treinos</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                        {/*<SearchBar pesquisa='Treinos' ehExame={false} ehAvaliacao={false} ehTreino={true} cpf={idosoInfo.cpf}/>*/}
+                        <SearchBar pesquisa='Treinos' ehExame={false} ehAvaliacao={false} ehTreino={true} cpf={idosoInfo.cpf} nome={idosoInfo.nome}/>
                     </div>
             
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Exames</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                        {/*<SearchBar pesquisa='Exames' ehExame={true} ehAvaliacao={false} ehTreino={false} cpf={idosoInfo.cpf}/>*/}
+                        <SearchBar pesquisa='Exames' ehExame={true} ehAvaliacao={false} ehTreino={false} cpf={idosoInfo.cpf} nome={idosoInfo.nome}/>
                     </div>
                     <div>
                         <h2 className='font-semibold text-xl text-[#6B3F97] mx-12 mt-8 mb-4'>Avaliação</h2>
                     </div>
                     <div className='justify-start items-center mx-12'>
-                        {/*<SearchBar pesquisa='Avaliações' ehExame={false} ehTreino={false} ehAvaliacao={true} cpf={idosoInfo.cpf}/>*/}
+                        <SearchBar pesquisa='Avaliações' ehExame={false} ehTreino={false} ehAvaliacao={true} cpf={idosoInfo.cpf} nome={idosoInfo.nome}/>
                     </div>
                 </div>
             </div>
