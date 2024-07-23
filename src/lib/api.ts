@@ -37,6 +37,16 @@ interface Idoso{
   medicamentos_quais: string
 }
 
+interface Treino {
+  id: number,
+  data: string,
+  treino_pres: string,
+  tempo_pres: number,
+  distancia_pres: number,
+  tempo_exec: number,
+  distancia_exec: number,
+  cpf_idoso: string
+}
 
 const urlBase = "http://localhost:8000/api/"
 
@@ -183,7 +193,7 @@ export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', m
 
 export async function deletarModalidade(termo: 'exame' | 'treino' | 'avaliacao', modo: any) {
   try {
-      const response = await axios.delete(`/idosos_dados/${termo}/${modo.id}`, {
+      const response = await api.delete(`/idosos_dados/${termo}/${modo.id}`, {
           data: modo // Ensure the request body includes 'modo'
       });
       console.log(`${termo} deletada(o) com sucesso:`, response.data);
@@ -215,25 +225,37 @@ export async function getAllExames() {
   return response.data;
 }
 
-export async function editarTreino(cpf: string) {
+export async function editarTreino(treino: Treino) {
   const response = await api.put('idosos_dados/treino/', {
     params: {
-      cpf: cpf,
+      id: treino.id,
+      data: treino.data,
+      treino_pres: treino.distancia_pres,
+      tempo_pres: treino.tempo_pres,
+      distancia_pres: treino.distancia_pres,
+      tempo_exec: treino.tempo_exec,
+      distancia_exec: treino.distancia_exec,
+      cpf_idoso: treino.cpf_idoso
     },
   });
   console.log(response.data);
   return response.data;
 }
 
-export async function deletarTreino(cpf: string) {
-  const response = await api.delete('idosos_dados/treino/', {
-    params: {
-      cpf: cpf,
-    },
+export async function createTreino(treino: Treino) {
+  const response = await api.post('idosos_dados/treino/criar/', {
+    data: treino.data,
+    treino_pres: treino.treino_pres,
+    tempo_pres: treino.tempo_pres,
+    distancia_pres: treino.distancia_pres,
+    tempo_exec: treino.tempo_exec,
+    distancia_exec: treino.distancia_exec,
+    cpf_idoso: treino.cpf_idoso
   });
-  console.log(response.data);
-  return response.data;
+
+  return response;
 }
+
 
 export async function getAllTreinosbyUser(cpf: string) {
   const response = await api.get('idosos_dados/treino/listar/'+cpf, {});
@@ -249,16 +271,6 @@ export async function getAllTreinos() {
 
 export async function editarAvaliacao(cpf: string) {
   const response = await api.put('idosos_dados/avaliacao/', {
-    params: {
-      cpf: cpf,
-    },
-  });
-  console.log(response.data);
-  return response.data;
-}
-
-export async function deletarAvaliacao(cpf: string) {
-  const response = await api.delete('idosos_dados/avaliacao/', {
     params: {
       cpf: cpf,
     },

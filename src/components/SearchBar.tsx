@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
-import { criarModalidade, deletarAvaliacao, deletarModalidade, mostrarModalidade } from "@/lib/api";
+import { criarModalidade, deletarModalidade, mostrarModalidade } from "@/lib/api";
 import Link from "next/link";
 
 interface CardsProps {
@@ -11,7 +11,7 @@ interface CardsProps {
     ehExame: boolean;
     ehTreino: boolean;
     ehAvaliacao: boolean;
-    cpf: string | undefined;
+    cpf: string;
     nome: string;
 }
 
@@ -42,20 +42,21 @@ interface Avaliacao {
 }
 
 interface Treino {
-    id: number;
-    nome: string;
-    data: string;
-    cpf: string;
-}
-
-interface ModalProps {
-    onClose: () => void;
+    id: number,
+    data: string,
+    treino_pres: string,
+    tempo_pres: number,
+    distancia_pres: number,
+    tempo_exec: number,
+    distancia_exec: number,
+    cpf_idoso: string
 }
 
 export function SearchBar(props: CardsProps) {
     const [dataPublicacao, setDataPublicacao] = useState<string>('');
     const [dadosExame, setDadosExame] = useState<Exame[]>([]);
     const [dadosAvaliacao, setDadosAvaliacao] = useState<Avaliacao[]>([]);
+
     const [dadosTreino, setDadosTreino] = useState<Treino[]>([]);
 
 
@@ -80,21 +81,25 @@ export function SearchBar(props: CardsProps) {
 
     }, [props.ehExame, props.ehTreino, props.ehAvaliacao, props.cpf]);
 
-    function deleteAvaliacao(inf : any) {
-        // Ensure 'inf' contains the necessary properties
-        if (!inf.id || !inf.cpf_idoso) {
-            console.error('CPF não fornecido ou ID não fornecido');
-            return;
+    function deleteModalide(inf: any, modalide: 'exame' | 'treino' | 'avaliacao') {
+        if (confirm('Realmente deseja deletar?')) {
+            if (!inf.id || !inf.cpf_idoso) {
+                console.error('ID não fornecido ou CPF não fornecido');
+                return;
+            }
+    
+            deletarModalidade(modalide, inf)
+                .then(() => {
+                    if(modalide == 'treino'){
+                        setDadosTreino(prevTreinos => prevTreinos.filter(treino => treino.id !== inf.id));
+                    } 
+                })
+                .catch(error => {
+                    console.error('Erro ao deletar modalidade:', error);
+                });
+    
+            console.log(inf);
         }
-    
-        // Pass the entire 'inf' object to 'deletarModalidade' to ensure 'cpf_idoso' is included
-        deletarModalidade('avaliacao', inf)
-            .then(() => {
-                console.log("Avaliação deletada com sucesso");
-            })
-            .catch(console.error);
-    
-        console.log(inf);
     }
 
     return (
@@ -109,7 +114,7 @@ export function SearchBar(props: CardsProps) {
                     Buscar
                 </button>
                     {props.ehExame&&<AddAvaliacao avaliacao={dadosExame} cpf={props.cpf} nome={props.nome} editar={false}/>}
-                    {props.ehTreino&&<AddTreino avaliacao={dadosTreino} cpf={props.cpf} nome={props.nome}  editar={false}/>}
+                    {props.ehTreino&&<AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={undefined} editar={false}/>}
                     {props.ehAvaliacao&&<AddAvaliacao avaliacao={dadosAvaliacao} cpf={props.cpf} nome={props.nome}  editar={false}/>}
                 <div className="flex items-center ml-2">
                     <input
@@ -157,13 +162,13 @@ export function SearchBar(props: CardsProps) {
                             <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
                                 <div className='flex flex-row justify-start items-center w-full'>
                                     <p className="w-[10vw] text-center border-r">{inf.id}</p>
-                                    <p className="w-[15vw] text-center border-r">{inf.nome}</p>
+                                    <p className="w-[15vw] text-center border-r">{inf.treino_pres}</p>
                                     <p className="w-[10vw] text-center border-r">{inf.data}</p>
                                     <div className="flex gap-6 items-center mx-8">
-                                        <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
+                                        <button onClick={() => deleteModalide(inf, 'treino')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
-                                        <AddAvaliacao avaliacao={inf} nome= {props.nome} cpf={props.cpf} editar={true} />
+                                        <AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={inf.id} editar={true}/>
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +183,7 @@ export function SearchBar(props: CardsProps) {
                                     <p className="w-[15vw] text-center border-r">{inf.nome}</p>
                                     <p className="w-[10vw] text-center border-r">{inf.data}</p>
                                     <div className="flex gap-6 items-center mx-8">
-                                        <button onClick={() => deleteAvaliacao(inf)} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
+                                        <button onClick={() => deleteModalide(inf, 'avaliacao')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
                                         <AddAvaliacao avaliacao={inf} cpf={props.cpf} nome={props.nome}  editar={true} />
