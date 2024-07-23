@@ -50,16 +50,19 @@ interface Idoso{
 
 export function DashboardInicial() {
 
-    useEffect(() => {
-        getIdosos().then((result) => {
-            setIdososList(result)
-        })
-      },[])
-
     const [idososList, setIdososList] = useState<Idoso[]>([]);
+    const [filteredIdososList, setFilteredIdososList] = useState<Idoso[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [selectedUser, setSelectedUser] = useState<Idoso[]>([]);
     const [selecionarVarios, setSelecionarVarios] = useState(false);
     const [isFiltroAberto, setIsFiltroAberto] = useState(false);
+
+    useEffect(() => {
+        getIdosos().then((result) => {
+            setIdososList(result)
+            setFilteredIdososList(result)
+        })
+      },[])
 
     const openModal = () => {
         setIsFiltroAberto(true);
@@ -102,32 +105,51 @@ export function DashboardInicial() {
     }
 
     function apagarUmIdoso(cpf: string) {
-        apagarIdoso(cpf)
-        setIdososList(prevList => prevList.filter(idoso => idoso.cpf !== cpf));
+        apagarIdoso(cpf).then(() => {
+            setIdososList(prevList => prevList.filter(idoso => idoso.cpf !== cpf));
+        });
     }
 
     function apagarVariosIdosos(pacientes: Idoso[]) {
         const cpfs = pacientes.map(paciente => paciente.cpf);
-        for(let i=0; i<cpfs.length; i++){
-            apagarIdoso(cpfs[i])
-        }
-        setIdososList(prevList => prevList.filter(idoso => !cpfs.includes(idoso.cpf)));
+        const promises = cpfs.map(cpf => apagarIdoso(cpf));
+        Promise.all(promises).then(() => {
+            setIdososList(prevList => prevList.filter(idoso => !cpfs.includes(idoso.cpf)));
+        });
     }
 
     function handleApagarIdoso(paciente: Idoso) {
         if (selectedUser.length > 1) {
-            if (confirm(`Deseja apagar os pacientes selecionados?`) == true) {
+            if (confirm(`Deseja apagar os pacientes selecionados?`) === true) {
                 apagarVariosIdosos(selectedUser);
                 setSelectedUser([]);
                 alert("Usuários removidos!");
             }
         } else {
-            if (confirm(`Deseja apagar o paciente: "${paciente.nome}" de cpf: "${paciente.cpf}"?`) == true) {
+            if (confirm(`Deseja apagar o paciente: "${paciente.nome}" de cpf: "${paciente.cpf}"?`) === true) {
                 apagarUmIdoso(paciente.cpf);
                 alert("Usuário removido!");
             }
         }
     }
+
+    function searchIdoso(searchTerm: string){
+        //Procura pelo edital pesquisado
+        const lowerCaseSearch = searchTerm.toLowerCase().trim();
+    
+        const filtered = idososList.filter((idoso) =>
+          (idoso.nome.toLowerCase().includes(lowerCaseSearch)||idoso.cpf.includes(lowerCaseSearch))
+        );
+    
+        setFilteredIdososList(filtered);
+      };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        //Detecta o aperto de enter na barra de pesquisa
+        if (e.key === "Enter") {
+            searchIdoso(searchTerm);
+        }
+      };
 
     return (
         <>
@@ -141,8 +163,11 @@ export function DashboardInicial() {
                         type="text"
                         placeholder="Pesquisar pacientes..."
                         className="h-full px-[1vw] flex-grow outline-none rounded-tl-md rounded-bl-md border-white"
+                        value={searchTerm}
+                        onChange={(e) => {setSearchTerm(e.target.value); searchIdoso(e.target.value)}}
+                        onKeyDown={handleKeyDown}
                     />
-                    <button className="hidden lg:block h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
+                    <button onClick={()=>searchIdoso(searchTerm)} className="hidden lg:block h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
                         Buscar
                     </button>
 
@@ -177,7 +202,7 @@ export function DashboardInicial() {
                             <input type='checkbox' onClick={()=>handleSelecionarVarios()} className='mr-3 bg-gray-50 border-gray-50 rounded-sm'/><p>Selecionar Vários</p>
                         </div>
                         {selectedUser.length>1?(<button className='bg-red-1100 w-10 h-10 justify-center hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold lg:hidden' onClick={() => handleApagarIdoso(selectedUser[0])}><FaRegTrashAlt  /></button>):(<div className='lg:hidden'/>)}
-                        {idososList.map((paciente) => (
+                        {filteredIdososList.map((paciente) => (
                             <>
                                 <div key={paciente.cpf} className='hidden lg:flex flex-row mt-[1.5vh]'>
                                     <div className="flex flex-row gap-x-4 lg:w-[17vw] text-center border-r pl-4 overflow-hidden items-center">
@@ -199,7 +224,7 @@ export function DashboardInicial() {
                                     )}
                                 </div>
 
-                                <div key={paciente.cpf} className='lg:hidden flex flex-col mt-[1.5vh] border rounded-lg py-3 px-2 w-full gap-y-3'>
+                                <div key={paciente.cpf+1} className='lg:hidden flex flex-col mt-[1.5vh] border rounded-lg py-3 px-2 w-full gap-y-3'>
                                     <div className="flex flex-row gap-x-4 text-center overflow-hidden items-center justify-start ">
                                         {selecionarVarios&&(<input type='checkbox' className=' bg-gray-50 border-gray-50 rounded-sm' onClick={()=>addPaciente(paciente)}/>)}
                                         <p className="overflow-hidden whitespace-nowrap text-ellipsis font-semibold">{paciente.nome}</p>

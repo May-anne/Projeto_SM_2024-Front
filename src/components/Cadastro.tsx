@@ -136,9 +136,20 @@ export function Cadastro(){
     };
 
     function handleCadastro(idoso: Idoso){
-        createIdoso(idoso).then(()=>{
-            router.push('/dashboard')
-        })
+        if(idosoInfo.cpf.length>11 || idosoInfo.cep.length>8 || idosoInfo.cartao_cns.length>15 || idosoInfo.rg.length>9){
+            alert(
+                    `Alguma(s) das seguintes informações não são válidas:
+                    \nCPf - Tamanho Inserido: ${idosoInfo.cpf.length} | Tamanho máximo: 11
+                    \nCEP - Tamanho Inserido: ${idosoInfo.cep.length} | Tamanho máximo: 8
+                    \nCNS - Tamanho Inserido: ${idosoInfo.cartao_cns.length} | Tamanho máximo: 15
+                    \nRG - Tamanho Inserido: ${idosoInfo.rg.length} | Tamanho máximo: 9
+                `)
+        }
+        else{
+            createIdoso(idoso).then(()=>{
+                router.push('/dashboard')
+            })
+        }
     }
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -332,7 +343,7 @@ export function Cadastro(){
                                     </div>
                                     <div className='items-center gap-2'>
                                         <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='cpf'>
-                                            CPF
+                                            CPF <span className='font-normal text-xs italic'>{'(Apenas números)'}</span>
                                         </label>
                                         <input
                                             className='shadow appearance-none border rounded w-[11vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
