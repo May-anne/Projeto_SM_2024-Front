@@ -181,14 +181,31 @@ export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', m
   }
 }
 
-export async function deletarModalidade(termo: 'exame' | 'treino' | 'avaliacao', modo: any) {
+export async function deletarModalidade(termo: 'exame' | 'treino' | 'avaliacao', id: number) {
   try {
-      const response = await axios.delete(`/idosos_dados/${termo}/${modo.id}`, {
-          data: modo // Ensure the request body includes 'modo'
-      });
+      const response = await axios.delete(urlBase+`idosos_dados/${termo}/${id}`);
       console.log(`${termo} deletada(o) com sucesso:`, response.data);
   } catch (error) {
       console.error(`Erro ao deletar ${termo}`, error);
+      if (axios.isAxiosError(error)) {
+          console.error('Axios error details:', error.toJSON());
+      } else {
+          console.error('Unexpected error:', error);
+      }
+  }
+}
+
+export async function atualizarModalidade(termo: 'exame' | 'treino' | 'avaliacao', id: number) {
+  try {
+      const response = await axios.put(urlBase+`idosos_dados/${termo}/${id}`);
+      console.log(`${termo} atualizado(a) com sucesso:`, response.data);
+  } catch (error) {
+      console.error(`Erro ao atualizar ${termo}`, error);
+      if (axios.isAxiosError(error)) {
+          console.error('Axios error details:', error.toJSON());
+      } else {
+          console.error('Unexpected error:', error);
+      }
   }
 }
 
@@ -203,10 +220,30 @@ export async function deletarExame(cpf: string) {
   return response.data;
 }
 
-export async function getAllExamesbyUser(cpf: string) {
-  const response = await api.get('/forms/exame/listacpf'+cpf, {});
-  console.log(response.data)
-  return response.data;
+export async function getAllExamesbyUser(cpf: string | undefined) {
+  if (cpf) throw new Error('CPF não fornecido');
+  try{
+    const response = await api.get('forms/exame/listacpf?cpf_idoso='+cpf, {});
+    console.log(response.data)
+    return response.data;
+  } catch(error){
+    console.log("Erro ao pegar exames.")
+  }
+}
+
+export async function criarExame(cpf: string | undefined, titulo: string, file: string ) {
+  try{const response = await api.post('/forms/exame/upload', {
+    params: {
+      cpf_idoso: cpf,
+      title: titulo,
+      file_url: file,
+    },
+  });
+  console.log(response.data);
+  return response.data;}
+  catch(error){
+    console.log("Erro ao criar exame.")
+  }
 }
 
 export async function getAllExames() {
@@ -235,25 +272,9 @@ export async function deletarTreino(cpf: string) {
   return response.data;
 }
 
-export async function getAllTreinosbyUser(cpf: string) {
-  const response = await api.get('idosos_dados/treino/listar/'+cpf, {});
-  console.log(response.data)
-  return response.data;
-}
-
 export async function getAllTreinos() {
   const response = await api.get('idosos_dados/treino/listar/');
   console.log(response.data)
-  return response.data;
-}
-
-export async function editarAvaliacao(cpf: string) {
-  const response = await api.put('idosos_dados/avaliacao/', {
-    params: {
-      cpf: cpf,
-    },
-  });
-  console.log(response.data);
   return response.data;
 }
 
@@ -264,12 +285,6 @@ export async function deletarAvaliacao(cpf: string) {
     },
   });
   console.log(response.data);
-  return response.data;
-}
-
-export async function getAllAvaliacoesbyUser(cpf: string) {
-  const response = await api.get('idosos_dados/avaliacao/listar/'+cpf, {});
-  console.log( response.data)
   return response.data;
 }
 

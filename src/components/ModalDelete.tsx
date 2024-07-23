@@ -38,7 +38,9 @@ export function ModalDelete({ isOpen, onClose, termo, id }: ModalProps) {
                         className='rounded-lg shadow-md border-2 border-green-700 hover:border-green-900 px-3 py-2 bg-green-700 text-white hover:bg-green-900'
                         onClick={() => {
                             if(termo == 'avaliacao'){
+                                console.log('id aqui: '+id);
                                 deleteAvaliacao(id);
+                                
                             } else if(termo == 'treino'){
                                 //deleteAvaliacao(id);
                             } else{
