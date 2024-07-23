@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
-import { criarModalidade, deletarModalidade, mostrarModalidade } from "@/lib/api";
+import { criarModalidade, deletarAvaliacao, deletarModalidade, getAllExamesbyUser, mostrarModalidade } from "@/lib/api"; 
 import Link from "next/link";
 
 interface CardsProps {
@@ -65,23 +65,20 @@ export function SearchBar(props: CardsProps) {
     };
 
     useEffect(() => {
-        let termo: 'exame' | 'treino' | 'avaliacao';
-        if (props.ehExame) {
-            termo = 'exame';
-            mostrarModalidade(termo, props.cpf).then(setDadosExame).catch(console.error);
-        } else if (props.ehTreino) {
+        let termo: 'treino' | 'avaliacao';
+         if (props.ehTreino) {
             termo = 'treino';
             mostrarModalidade(termo, props.cpf).then(setDadosTreino).catch(console.error);
         } else if (props.ehAvaliacao) {
             termo = 'avaliacao';
             mostrarModalidade(termo, props.cpf).then(setDadosAvaliacao).catch(console.error);
-        } else {
-            return;
+        } else { //Então, é exame
+            //getAllExamesbyUser(props.cpf).then(setDadosExame).catch(console.error)
         }
 
-    }, [props.ehExame, props.ehTreino, props.ehAvaliacao, props.cpf]);
+    }, [props.ehTreino, props.ehAvaliacao, props.cpf]);
 
-    function deleteModalide(inf: any, modalide: 'exame' | 'treino' | 'avaliacao') {
+    function deleteModalide(inf: any, modalide: 'exame' | 'treino' | 'avaliacao') { 
         if (confirm('Realmente deseja deletar?')) {
             if (!inf.id || !inf.cpf_idoso) {
                 console.error('ID não fornecido ou CPF não fornecido');
@@ -98,7 +95,7 @@ export function SearchBar(props: CardsProps) {
                     console.error('Erro ao deletar modalidade:', error);
                 });
     
-            console.log(inf);
+            console.log(inf); 
         }
     }
 
@@ -114,7 +111,7 @@ export function SearchBar(props: CardsProps) {
                     Buscar
                 </button>
                     {props.ehExame&&<AddAvaliacao avaliacao={dadosExame} cpf={props.cpf} nome={props.nome} editar={false}/>}
-                    {props.ehTreino&&<AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={undefined} editar={false}/>}
+                    {props.ehTreino&&<AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={undefined} editar={false}/>} 
                     {props.ehAvaliacao&&<AddAvaliacao avaliacao={dadosAvaliacao} cpf={props.cpf} nome={props.nome}  editar={false}/>}
                 <div className="flex items-center ml-2">
                     <input
@@ -150,7 +147,7 @@ export function SearchBar(props: CardsProps) {
                                         <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
-                                        <AddAvaliacao avaliacao={null} cpf={props.cpf} nome={props.nome}  editar={true} />
+                                        <AddExame exame={inf} cpf={props.cpf} nome={props.nome}  editar={true} />
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +180,7 @@ export function SearchBar(props: CardsProps) {
                                     <p className="w-[15vw] text-center border-r">{inf.nome}</p>
                                     <p className="w-[10vw] text-center border-r">{inf.data}</p>
                                     <div className="flex gap-6 items-center mx-8">
-                                        <button onClick={() => deleteModalide(inf, 'avaliacao')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
+                                        <button onClick={() => deleteModalide(inf, 'avaliacao')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2"> 
                                             <FaRegTrashAlt />
                                         </button>
                                         <AddAvaliacao avaliacao={inf} cpf={props.cpf} nome={props.nome}  editar={true} />

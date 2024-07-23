@@ -86,19 +86,6 @@ export function AddAvaliacao(props: ModalProps){
     
     }
 
-    function deleteAvaliacao() {
-        if (!AvaliacaoInfo.cpf_idoso) {
-            console.error("CPF não fornecido");
-            return;
-        }
-        deletarModalidade('avaliacao', AvaliacaoInfo)
-            .then(() => {
-                console.log("Avaliação deletada com sucesso");
-            })
-            .catch(console.error);
-        console.log(AvaliacaoInfo);
-    }
-
     function createAvaliacao() {
         if (!AvaliacaoInfo.cpf_idoso) {
             console.error("CPF não fornecidooo");
@@ -111,8 +98,8 @@ export function AddAvaliacao(props: ModalProps){
             .catch(console.error);
         console.log(AvaliacaoInfo);
     }
-    return (
 
+    return (
         <>
         {!props.editar ? (
                 <button 
