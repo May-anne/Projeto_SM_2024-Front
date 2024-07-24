@@ -253,7 +253,7 @@ export async function criarExame(cpf: string | undefined, titulo: string, file: 
 }
 
 export async function getAllExames() {
-  const response = await api.get('/forms/exame/lista_geral');
+  const response = await api.get('/idosos_dados/exame/lista_geral');
   console.log(response.data)
   return response.data;
 }
@@ -296,7 +296,7 @@ export async function getAllTreinosbyUser(cpf: string) {
 }
 
 export async function getAllTreinos() {
-  const response = await api.get('idosos_dados/treino/listar/');
+  const response = await api.get('idosos_dados/treino/lista/');
   console.log(response.data)
   return response.data;
 }
@@ -327,7 +327,7 @@ export async function getAllAvaliacoesbyUser(cpf: string) {
 }
 
 export async function getAllAvaliacoes() {
-  const response = await api.get('idosos_dados/avaliacao/listar/');
+  const response = await api.get('idosos_dados/avaliacao/lista/');
   console.log( response.data)
   return response.data;
 }

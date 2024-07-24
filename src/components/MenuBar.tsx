@@ -11,6 +11,7 @@ import { FaRegCircleUser, FaRegNoteSticky } from 'react-icons/fa6';
 import React, { useState, useEffect, useRef, RefObject } from 'react';
 import Link from 'next/link';
 import { DashboardInicial } from './DashboardInicial';
+import { TbReport } from "react-icons/tb"
 
 
 export function MenuBar() {
@@ -86,6 +87,10 @@ export function MenuBar() {
                         <li className='flex items-center'>
                             <FaRegNoteSticky className='mr-2' size={22} />
                             <Link href='#' className='block text-gray-600 hover:underline'>Avaliações</Link>
+                        </li>
+                        <li className='flex items-center'>
+                            <TbReport className='mr-2' size={22} />
+                            <Link href='/relatorios' className='block text-gray-600 hover:underline'>Relatórios</Link>
                         </li>
                     </ul>
                 </div>
