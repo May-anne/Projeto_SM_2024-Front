@@ -1,9 +1,9 @@
-import { FaRegCalendarAlt, FaPlus, FaRegTrashAlt } from "react-icons/fa";
+import { FaRegCalendarAlt, FaPlus, FaRegTrashAlt, FaFileDownload } from "react-icons/fa";
 import React, { useEffect, useState } from 'react';
 import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
-import { criarModalidade, deletarAvaliacao, deletarModalidade, getAllExamesbyUser, getAllTreino, mostrarModalidade } from "@/lib/api"; 
+import { criarModalidade, deletarAvaliacao, deletarModalidade, getAllExamesbyUser, mostrarModalidade, urlDownload } from "@/lib/api"; 
 import { TiDeleteOutline } from "react-icons/ti";
 import Link from "next/link";
 import { OrganizeImportsMode } from "typescript";
@@ -21,6 +21,7 @@ interface CardsProps {
 interface Exame {
     id: number;
     title: string;
+    uploaded_at: string;
     cpf_idoso: string;
     file: string;
 }
@@ -67,30 +68,35 @@ export function SearchBar(props: CardsProps) {
 
     useEffect(() => {
         let termo: 'treino' | 'avaliacao';
-        if (props.ehTreino) {
-            termo = 'treino';
-            mostrarModalidade(termo, props.cpf)
-                .then((result) => {
-                    setDadosTreino(result);  // Store the result
-                    setFilteredInfo(result); // Set filtered info with the fetched data
-                })
-                .catch(console.error);
-        } else if (props.ehAvaliacao) {
-            termo = 'avaliacao';
-            mostrarModalidade(termo, props.cpf)
-                .then((result) => {
-                    setDadosAvaliacao(result);
-                    setFilteredInfo(result); // Set filtered info with the fetched data
-                })
-                .catch(console.error);
-
-        } else if(props.ehTreino && props.searchAll == true) { 
-            getAllTreino().then((result) => {
-                setDadosTreino(result);
-                setFilteredInfo(result);
-            })
+        if (props.cpf) {
+            if (props.ehTreino) {
+                termo = 'treino';
+                mostrarModalidade(termo, props.cpf)
+                    .then((result) => {
+                        setDadosTreino(result);  // Store the result
+                        setFilteredInfo(result); // Set filtered info with the fetched data
+                    })
+                    .catch(console.error);
+            } else if (props.ehAvaliacao) {
+                termo = 'avaliacao';
+                mostrarModalidade(termo, props.cpf)
+                    .then((result) => {
+                        setDadosAvaliacao(result);
+                        setFilteredInfo(result); // Set filtered info with the fetched data
+                    })
+                    .catch(console.error);
+            } else { // Então, é exame
+                getAllExamesbyUser(props.cpf)
+                    .then((result) => {
+                        setDadosExame(result);
+                        console.log(result)
+                        setFilteredInfo(result); // Set filtered info with the fetched data
+                    })
+                    .catch(console.error);
+            } 
         }
-    }, [props.ehTreino, props.ehAvaliacao, props.cpf, props.searchAll]);
+    }, [props.ehTreino, props.ehAvaliacao, props.cpf]);
+
 
     useEffect(() => {
         searchInfo(searchTerm); // Atualiza a filtragem sempre que searchTerm ou dataPublicacao muda
@@ -127,12 +133,12 @@ export function SearchBar(props: CardsProps) {
             );
         } /*else { // Então, é exame
             filtered = dadosExame.filter((exame) =>
-                exame.nome.toLowerCase().includes(lowerCaseSearch) &&
+                exame.title.toLowerCase().includes(lowerCaseSearch) &&
                 (dataPublicacao === '' || exame.data.includes(dataPublicacao))
             );
-        }*/
+        }
 
-        setFilteredInfo(filtered);
+        setFilteredInfo(filtered);*/
     }
     
 
@@ -164,6 +170,14 @@ export function SearchBar(props: CardsProps) {
         }
     }
 
+    function formatDate(dateString: string): string {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     return (
         <>
             <div className='w-[50vw] h-[6vh] rounded-md flex items-center mb-4'>
@@ -178,7 +192,7 @@ export function SearchBar(props: CardsProps) {
                 <button onClick={()=>searchInfo(searchTerm)} className="h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
                     Buscar
                 </button>
-                    {props.ehExame&&<AddExame exame={dadosExame} cpf={props.cpf} nome={props.nome} editar={false}/>}
+                    {props.ehExame&&<AddExame exameID={undefined} exameInfo={dadosExame} setExamoInfo={setDadosExame} cpf={props.cpf}/>}
                     {props.ehTreino&&<AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={undefined} editar={false}/>} 
                     {props.ehAvaliacao&&<AddAvaliacao avaliacao={dadosAvaliacao} cpf={props.cpf} nome={props.nome}  editar={false}/>}
                 <div className="flex items-center ml-2">
@@ -218,11 +232,13 @@ export function SearchBar(props: CardsProps) {
                                 <div className='flex flex-row justify-start items-center w-full'>
                                     <p className="w-[10vw] text-center border-r">{inf.id}</p>
                                     <p className="w-[15vw] text-center border-r">{inf.title}</p>
-                                    <div className="flex gap-6 items-center mx-8">
+                                    <p className="w-[10vw] text-center border-r">{formatDate(inf.uploaded_at)}</p>
+                                    
+                                    <div className="flex flex-row justify-center gap-6 items-center mx-8">
                                         <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
-                                        <AddExame exame={inf} cpf={props.cpf} nome={props.nome}  editar={true} />
+                                        <a href={urlDownload+inf.file} target="blank" className="rounded-md text-[#6B3F97] hover:bg-gray-50 px-2 py-2"><FaFileDownload  /></a>
                                     </div>
                                 </div>
                             </div>
