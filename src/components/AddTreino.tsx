@@ -1,5 +1,5 @@
 "use client";
-import { createTreino, editarTreino } from "@/lib/api";
+import { atualizarModalidade, createTreino, editarTreino } from "@/lib/api";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
@@ -72,7 +72,7 @@ export function AddTreino(props: ModalProps) {
     }
 
     function handleSalvar() {
-        editarTreino(prescricao).then(() => {
+        atualizarModalidade('treino', prescricao).then(() => {
 
           const updatedTreinos = props.treinosInfo.map(treino => {
             if (treino.id === prescricao.id) {

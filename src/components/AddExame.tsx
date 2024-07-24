@@ -71,52 +71,6 @@ export function AddExame(props: ModalProps){
         }));
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const target = e.target as HTMLInputElement & {
-            files: FileList;
-          };
-          if (target.files && target.files[0]) {
-            const formData = new FormData();
-            formData.append("exame_pdf", target.files[0]);
-              try {
-                const Response = await criarPreProjeto(
-                  userInfo.id,
-                  selectedEdital.id
-                );
-                const uploadResponse = await uploadFile(
-                  "preprojeto",
-                  preProjetoResponse.id,
-                  formData
-                );
-                console.log("File uploaded successfully:", uploadResponse);
-                setNewSearch(!newSearch);
-                setIsEditaisVisible(false);
-              } catch (error) {
-                console.error("Error uploading file:", error);
-              }
-          }
-
-        if (file) {
-            console.log('Arquivo selecionado:', file.name);
-            setExame(prevState => ({
-                ...prevState,
-                linkPDF: file
-            }));
-        } else {
-            // Caso nenhum arquivo seja selecionado (file === null)
-            setExame(prevState => ({
-                ...prevState,
-                linkPDF: null
-            }));
-        }
-    };
-
-    useEffect(() => {
-        setExame(prevState => ({
-            ...prevState,
-            cpf: props.cpf
-        }));
-    }, [props.cpf]);
 
     return (
         <>
@@ -204,7 +158,7 @@ export function AddExame(props: ModalProps){
                 <div className='mt-8 mx-8'>
                 <input
                     type="file" name='file_url'
-                    onChange={handleFileChange}
+                    //onChange={handleFileChange}
                     className="hidden"
                     id="upload"
 />

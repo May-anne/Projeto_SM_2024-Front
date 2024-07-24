@@ -202,9 +202,9 @@ export async function deletarModalidade(termo: 'exame' | 'treino' | 'avaliacao',
   }
 }
 
-export async function atualizarModalidade(termo: 'exame' | 'treino' | 'avaliacao', id: number) {
+export async function atualizarModalidade(termo: 'exame' | 'treino' | 'avaliacao', modo: any) {
   try {
-      const response = await axios.put(urlBase+`idosos_dados/${termo}/${id}`);
+      const response = await axios.put(urlBase+`idosos_dados/${termo}/${modo.id}`);
       console.log(`${termo} atualizado(a) com sucesso:`, response.data);
   } catch (error) {
       console.error(`Erro ao atualizar ${termo}`, error);
@@ -332,6 +332,12 @@ export async function getAllAvaliacoesbyUser(cpf: string) {
 export async function getAllAvaliacoes() {
   const response = await api.get('idosos_dados/avaliacao/lista/');
   console.log( response.data)
+  return response.data;
+}
+
+export async function getAllTreino() {
+  const response = await api.get('idosos_dados/treino/lista/');
+  console.log(response.data)
   return response.data;
 }
 
