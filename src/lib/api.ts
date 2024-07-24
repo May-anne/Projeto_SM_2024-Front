@@ -222,14 +222,21 @@ export async function deletarModalidade(termo: 'exame' | 'treino' | 'avaliacao',
   }
 }
 
-export async function deletarExame(cpf: string) {
-  const response = await api.delete('/forms/exame/apagar', {
-    params: {
-      cpf: cpf,
-    },
-  });
-  console.log(response.data);
-  return response.data;
+
+export async function deletarExame(exame: any) {
+  try{
+    const response = await api.delete(`/idosos_dados/exame/apagar`, {
+      params: {
+        exame_id: exame.id,
+        cpf_idoso: exame.cpf_idoso,
+        title: exame.title
+      },
+    });
+    console.log(response.data)
+    return response.data;
+  } catch(error){
+    console.log("Erro ao pegar exames.")
+  }
 }
 
 export async function getAllExamesbyUser(cpf: string) {
@@ -265,6 +272,7 @@ export async function getAllExames() {
   console.log(response.data)
   return response.data;
 }
+
 
 export async function editarTreino(treino: Treino) {
   const response = await api.put(`idosos_dados/treino/${treino.id}/`, {

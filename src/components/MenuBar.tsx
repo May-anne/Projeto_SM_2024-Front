@@ -82,11 +82,11 @@ export function MenuBar() {
                         </li>
                         <li className='flex items-center'>
                             <PiExam className='mr-2' size={22} />
-                            <Link href='#' className='block text-gray-600 hover:underline'>Exames</Link>
+                            <Link href='/exames' className='block text-gray-600 hover:underline'>Exames</Link>
                         </li>
                         <li className='flex items-center'>
                             <FaRegNoteSticky className='mr-2' size={22} />
-                            <Link href='#' className='block text-gray-600 hover:underline'>Avaliações</Link>
+                            <Link href='/avaliacoes' className='block text-gray-600 hover:underline'>Avaliações</Link>
                         </li>
                         <li className='flex items-center'>
                             <TbReport className='mr-2' size={22} />

@@ -190,7 +190,7 @@ export function DashboardInicial() {
                             <p className="lg:w-[10vw] text-center border-r">CPF</p>
                             <div className='lg:w-[30%] flex flex-row justify-between items-center rounded-md px-4 py-4'>
                                 <button className='text-[#6B3F97] hover:bg-gray-50 py-3 px-2 items-center flex rounded-full font-semibold'><MdOutlineSort size={24} /></button> 
-                                {selectedUser.length>1&&(<button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold' onClick={() => handleApagarIdoso(selectedUser[0])}><FaRegTrashAlt  /></button>)}
+                                {selectedUser.length>1&&(<button className='rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2 items-center flex  font-semibold' onClick={() => handleApagarIdoso(selectedUser[0])}><FaRegTrashAlt  /></button>)}
                             </div>
                         </div>
                     </div>
@@ -213,8 +213,8 @@ export function DashboardInicial() {
                                     <p className="lg:w-[5vw] text-center border-r">{calcularIdade(paciente.data_nascimento)}</p>
                                     <p className="lg:w-[10vw] text-center border-r">{paciente.cpf}</p>
                                     {selectedUser.length<=1&&
-                                    (<div className='flex flex-row lg:w-[25%] justify-end gap-x-5'>
-                                        <button className='bg-red-1100 hover:opacity-60 py-2 px-2 items-center flex rounded-full font-semibold' onClick={()=>{handleApagarIdoso(paciente)}}><FaRegTrashAlt  /></button>
+                                    (<div className='flex flex-row lg:w-[25%] justify-end gap-x-5 mr-10'>
+                                        <button className='rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2 items-center flex  font-semibold' onClick={()=>{handleApagarIdoso(paciente)}}><FaRegTrashAlt size={20} /></button>
                                         <button className='bg-purple-500 px-2 hover:opacity-60 py-3 items-center flex rounded-full font-semibold text-white'> 
                                             <Link className='hidden lg:block' href={`/perfil?cpf=${paciente.cpf}`}> Ver Mais </Link>
                                             <Link className='lg:hidden block' href={`/perfil?cpf=${paciente.cpf}`}> <FaEye/> </Link>

@@ -14,15 +14,17 @@ import { SearchBar } from './SearchBar';
 
 
 export function AllExames() {
-
-    return (
-        <>
-        <div className='h-[100vh] w-[100vw] bg-[#eae3ef]'>
-            <HeaderPage/>
-            <div className='justify-center items-center mx-12 my-12'>
-              <SearchBar searchAll={true} pesquisa={'exames'} ehExame={true} ehTreino={false} ehAvaliacao={false} nome="" cpf=""/>
-            </div>
+  return (
+    <div className='relative'>
+      <HeaderPage />
+      <div className='h-screen w-screen bg-[#eae3ef] flex flex-col justify-center items-center'>
+        <div>
+          <h2 className='text-3xl font-semibold text-[#6B3F97]'>Listagem Geral de Exames</h2>
         </div>
-        </>
-      );
-    }      
+          <div className='mx-12 my-12'>
+              <SearchBar searchAll={true} pesquisa={'exames'} ehExame={true} ehTreino={false} ehAvaliacao={false} nome="" cpf=""/>
+          </div>
+      </div>
+      </div>
+  );
+}

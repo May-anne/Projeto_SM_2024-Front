@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
-import { criarModalidade, deletarAvaliacao, deletarModalidade, getAllExamesbyUser, mostrarModalidade, urlDownload } from "@/lib/api"; 
+import { criarModalidade, deletarAvaliacao, deletarExame, deletarModalidade, getAllAvaliacoes, getAllExames, getAllExamesbyUser, mostrarModalidade, urlDownload } from "@/lib/api"; 
 import { TiDeleteOutline } from "react-icons/ti";
 import Link from "next/link";
 import { OrganizeImportsMode } from "typescript";
@@ -60,6 +60,7 @@ export function SearchBar(props: CardsProps) {
     const [dataPublicacao, setDataPublicacao] = useState<string>('');
     const [dadosExame, setDadosExame] = useState<Exame[]>([]);
     const [dadosAvaliacao, setDadosAvaliacao] = useState<Avaliacao[]>([]);
+    const [allDadosExames, setAllDadosExame] = useState<Exame[]>([]);
 
     const [filteredInfo, setFilteredInfo] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
@@ -99,6 +100,32 @@ export function SearchBar(props: CardsProps) {
         }
     }, [props.ehTreino, props.ehAvaliacao, props.cpf]);
 
+    useEffect(() => {
+        console.log('Props mudaram:', props.ehExame, props.searchAll);
+    
+        if (props.ehExame && props.searchAll) {
+            getAllExames()
+                .then((result) => {
+                    console.log('Dados de exames recebidos:', result);
+                    setAllDadosExame(result);
+                    setFilteredInfo(result);
+                })
+                .catch((error) => {
+                    console.error('Erro ao obter exames:', error);
+                });
+        } else if (props.ehAvaliacao && props.searchAll) {
+            getAllAvaliacoes()
+                .then((result) => {
+                    console.log('Dados de avaliações recebidos:', result);
+                    setAllDadosExame(result); // Aqui você deve considerar renomear para setAllDadosAvaliacao, se aplicável
+                    setFilteredInfo(result);
+                })
+                .catch((error) => {
+                    console.error('Erro ao obter avaliações:', error);
+                });
+        }
+    }, [props.ehExame, props.ehAvaliacao, props.searchAll]);
+    
 
     useEffect(() => {
         searchInfo(searchTerm); // Atualiza a filtragem sempre que searchTerm ou dataPublicacao muda
@@ -174,6 +201,17 @@ export function SearchBar(props: CardsProps) {
                 })
                 .catch(error => {
                     console.error('Erro ao deletar modalidade:', error);
+                });
+
+                deletarExame(inf)
+                .then(() => {
+                    if (modalide === 'exame') {
+                        setDadosExame(prevExames => prevExames.filter(exame => exame.id !== inf.id));
+                        setFilteredInfo(prevExames => prevExames.filter(exame => exame.id !== inf.id));
+                    } 
+                })
+                .catch(error => {
+                    console.error('Erro ao deletar exame', error);
                 });
     
             console.log(inf); 
@@ -290,6 +328,24 @@ export function SearchBar(props: CardsProps) {
                                             <FaRegTrashAlt />
                                         </button>
                                         <AddAvaliacao avaliacaoID={inf.id} avaliacaoInfo={dadosAvaliacao} cpf={props.cpf} nome={props.nome} setAvaliacaoInfo={setDadosAvaliacao} editar={true} />
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                    {props.ehExame && props.searchAll && (
+                         filteredInfo.map((inf) => (
+                            <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
+                                <div className='flex flex-row justify-start items-center w-full'>
+                                    <p className="w-[10vw] text-center border-r">{inf.id}</p>
+                                    <p className="w-[15vw] text-center border-r">{inf.title}</p>
+                                    <p className="w-[10vw] text-center border-r">{formatDate(inf.uploaded_at)}</p>
+                                    
+                                    <div className="flex flex-row justify-center gap-6 items-center mx-8">
+                                        <button onClick={() => deleteModalide(inf, 'exame')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
+                                            <FaRegTrashAlt />
+                                        </button>
+                                        <a href={urlDownload+inf.file} target="blank" className="rounded-md text-[#6B3F97] hover:bg-gray-50 px-2 py-2"><FaFileDownload  /></a>
                                     </div>
                                 </div>
                             </div>
