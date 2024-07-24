@@ -48,8 +48,8 @@ interface Treino {
   cpf_idoso: string
 }
 
-export const urDownload = "http://localhost:8000/api"
-const urlBase = urDownload+"/"
+export const urlDownload = "http://localhost:8000/api"
+const urlBase = urlDownload+"/"
 
 
 export async function loginUser(nome: string, senha: string) {
@@ -203,9 +203,9 @@ export async function deletarModalidade(termo: 'exame' | 'treino' | 'avaliacao',
   }
 }
 
-export async function atualizarModalidade(termo: 'exame' | 'treino' | 'avaliacao', id: number) {
+export async function atualizarModalidade(termo: 'exame' | 'treino' | 'avaliacao', modo: any) {
   try {
-      const response = await axios.put(urlBase+`idosos_dados/${termo}/${id}`);
+      const response = await axios.put(urlBase+`idosos_dados/${termo}/${modo.id}`);
       console.log(`${termo} atualizado(a) com sucesso:`, response.data);
   } catch (error) {
       console.error(`Erro ao atualizar ${termo}`, error);
@@ -256,7 +256,7 @@ export async function criarExame(formData: FormData) {
 }
 
 export async function getAllExames() {
-  const response = await api.get('/forms/exame/lista_geral');
+  const response = await api.get('/idosos_dados/exame/lista_geral');
   console.log(response.data)
   return response.data;
 }
@@ -299,7 +299,7 @@ export async function getAllTreinosbyUser(cpf: string) {
 }
 
 export async function getAllTreinos() {
-  const response = await api.get('idosos_dados/treino/listar/');
+  const response = await api.get('idosos_dados/treino/lista/');
   console.log(response.data)
   return response.data;
 }
@@ -331,9 +331,23 @@ export async function getAllAvaliacoesbyUser(cpf: string) {
 }
 
 export async function getAllAvaliacoes() {
-  const response = await api.get('idosos_dados/avaliacao/listar/');
+  const response = await api.get('idosos_dados/avaliacao/lista/');
   console.log( response.data)
   return response.data;
+}
+ 
+export async function uploadFile(tipo: string, id:number, formData: FormData) {
+  try {
+    const response = await api.post(`${tipo}/inserir/${id}/pdf`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
 }
 
 export const api = axios.create({

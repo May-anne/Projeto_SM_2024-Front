@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
-import { criarModalidade, deletarAvaliacao, deletarModalidade, getAllExamesbyUser, mostrarModalidade, urDownload } from "@/lib/api"; 
+import { criarModalidade, deletarAvaliacao, deletarModalidade, getAllExamesbyUser, mostrarModalidade, urlDownload } from "@/lib/api"; 
 import { TiDeleteOutline } from "react-icons/ti";
 import Link from "next/link";
+import { OrganizeImportsMode } from "typescript";
 
 interface CardsProps {
     pesquisa: string;
@@ -14,6 +15,7 @@ interface CardsProps {
     ehAvaliacao: boolean;
     cpf: string;
     nome: string;
+    searchAll: boolean;
 }
 
 interface Exame {
@@ -91,9 +93,10 @@ export function SearchBar(props: CardsProps) {
                         setFilteredInfo(result); // Set filtered info with the fetched data
                     })
                     .catch(console.error);
-            }
+            } 
         }
     }, [props.ehTreino, props.ehAvaliacao, props.cpf]);
+
 
     useEffect(() => {
         searchInfo(searchTerm); // Atualiza a filtragem sempre que searchTerm ou dataPublicacao muda
@@ -235,7 +238,7 @@ export function SearchBar(props: CardsProps) {
                                         <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
-                                        <a href={urDownload+inf.file} target="blank" className="rounded-md text-[#6B3F97] hover:bg-gray-50 px-2 py-2"><FaFileDownload  /></a>
+                                        <a href={urlDownload+inf.file} target="blank" className="rounded-md text-[#6B3F97] hover:bg-gray-50 px-2 py-2"><FaFileDownload  /></a>
                                     </div>
                                 </div>
                             </div>
@@ -259,6 +262,25 @@ export function SearchBar(props: CardsProps) {
                             </div>
                         ))
                     )}
+
+                    {props.ehTreino && props.searchAll && (
+                        filteredInfo.map((inf: any) => (
+                            <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
+                                <div className='flex flex-row justify-start items-center w-full'>
+                                    <p className="w-[10vw] text-center border-r">{inf.id}</p>
+                                    <p className="w-[15vw] text-center border-r">{inf.treino_pres}</p>
+                                    <p className="w-[10vw] text-center border-r">{inf.data}</p>
+                                    <div className="flex gap-6 items-center mx-8">
+                                        <button onClick={() => deleteModalide(inf, 'treino')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
+                                            <FaRegTrashAlt />
+                                        </button>
+                                        <AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={inf.id} editar={true}/>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+
 
                     {props.ehAvaliacao&& (
                         dadosAvaliacao.map((inf) => (
