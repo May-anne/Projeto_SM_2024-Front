@@ -48,6 +48,25 @@ interface Treino {
   cpf_idoso: string
 }
 
+interface Avaliacao {
+  id: number,
+  nome: string,
+  data: string,
+  cpf_idoso: string,
+  peso: number,
+  estatura: number,
+  marcha6: number,
+  per_cintura: number,
+  per_quadril: number,
+  per_panturrilha: number,
+  hg_esquerda1: number,
+  hg_esquerda2: number,
+  hg_direita1: number,
+  hg_direita2: number,
+  ir_vir1: number,
+  ir_vir2: number,
+}
+
 export const urlDownload = "http://localhost:8000/api"
 const urlBase = urlDownload+"/"
 
@@ -181,8 +200,8 @@ export async function mostrarModalidade(termo: 'exame' | 'treino' | 'avaliacao',
 }
 
 export async function criarModalidade(termo: 'exame' | 'treino' | 'avaliacao', modo: any) {
-  if (!modo.cpf_idoso) throw new Error('CPF não fornecido');
   try {
+      console.log(modo +" kk")
       const response = await api.post(`/idosos_dados/${termo}/criar/`, modo);
       console.log(response.data);
       return response.data;
@@ -200,20 +219,6 @@ export async function deletarModalidade(termo: 'exame' | 'treino' | 'avaliacao',
       console.log(`${termo} deletada(o) com sucesso:`, response.data);
   } catch (error) {
       console.error(`Erro ao deletar ${termo}`, error);
-  }
-}
-
-export async function atualizarModalidade(termo: 'exame' | 'treino' | 'avaliacao', modo: any) {
-  try {
-      const response = await axios.put(urlBase+`idosos_dados/${termo}/${modo.id}`);
-      console.log(`${termo} atualizado(a) com sucesso:`, response.data);
-  } catch (error) {
-      console.error(`Erro ao atualizar ${termo}`, error);
-      if (axios.isAxiosError(error)) {
-          console.error('Axios error details:', error.toJSON());
-      } else {
-          console.error('Unexpected error:', error);
-      }
   }
 }
 
@@ -262,17 +267,15 @@ export async function getAllExames() {
 }
 
 export async function editarTreino(treino: Treino) {
-  const response = await api.put('idosos_dados/treino/', {
-    params: {
-      id: treino.id,
-      data: treino.data,
-      treino_pres: treino.distancia_pres,
-      tempo_pres: treino.tempo_pres,
-      distancia_pres: treino.distancia_pres,
-      tempo_exec: treino.tempo_exec,
-      distancia_exec: treino.distancia_exec,
-      cpf_idoso: treino.cpf_idoso
-    },
+  const response = await api.put(`idosos_dados/treino/${treino.id}/`, {
+    id: treino.id,
+    data: treino.data,
+    treino_pres: treino.distancia_pres,
+    tempo_pres: treino.tempo_pres,
+    distancia_pres: treino.distancia_pres,
+    tempo_exec: treino.tempo_exec,
+    distancia_exec: treino.distancia_exec,
+    cpf_idoso: treino.cpf_idoso
   });
   console.log(response.data);
   return response.data;
@@ -304,11 +307,24 @@ export async function getAllTreinos() {
   return response.data;
 }
 
-export async function editarAvaliacao(cpf: string) {
-  const response = await api.put('idosos_dados/avaliacao/', {
-    params: {
-      cpf: cpf,
-    },
+export async function editarAvaliacao(avaliacao: Avaliacao) {
+  const response = await api.put(`idosos_dados/avaliacao/${avaliacao.id}`, {
+    id: avaliacao.id,
+    nome: avaliacao.nome,
+    data: avaliacao.data,
+    cpf_idoso: avaliacao.cpf_idoso,
+    peso: avaliacao.peso,
+    estatura: avaliacao.estatura,
+    marcha6: avaliacao.marcha6,
+    per_cintura: avaliacao.per_cintura,
+    per_quadril: avaliacao.per_quadril,
+    per_panturrilha: avaliacao.per_panturrilha,
+    hg_esquerda1: avaliacao.hg_esquerda1,
+    hg_esquerda2: avaliacao.hg_esquerda2,
+    hg_direita1: avaliacao.hg_direita1,
+    hg_direita2: avaliacao.hg_direita2,
+    ir_vir1: avaliacao.ir_vir1,
+    ir_vir2: avaliacao.ir_vir2,
   });
   console.log(response.data);
   return response.data;

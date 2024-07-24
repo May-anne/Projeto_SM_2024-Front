@@ -321,7 +321,7 @@ export function Perfil(){
                 {renderCrossImages()}
             </div>
             <div className='flex flex-col justify-center items-center pt-20 z-20 relative'>
-                <div className='bg-[#F8F5FA] shadow-lg rounded-lg h-auto w-[60vw]'>
+                <div className='bg-[#F8F5FA] shadow-lg rounded-lg h-auto w-[60vw] pb-10'>
                     <div className='w-full grid grid-cols-3 justify-center items-center mt-8 gap-1 px-[4vw]'>
                         <Link href={'/dashboard'} className='text-sm font-bold hover:opacity-60'>{'< Voltar'}</Link>
                         <h2 className='font-semibold text-2xl text-[#6B3F97]'>Perfil do(a) Paciente</h2>

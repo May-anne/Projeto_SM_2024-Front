@@ -63,43 +63,40 @@ export function AddExame(props: ModalProps){
   }
 
   const criarNovoExame = async () => {
+    if (file) {
+      try {
+        const formData = new FormData();
+        console.log(props.cpf);
+        formData.append("cpf_idoso", props.cpf);
+        formData.append("title", ExameInfo.title);
+        formData.append("file", file);
   
-      if (file) {
         try {
-          
-          const formData = new FormData();
-          console.log(props.cpf)
-          formData.append("cpf_idoso", props.cpf);
-          formData.append("title", ExameInfo.title);
-          formData.append("file", file);
-          try {
-            const uploadResponse = await criarExame(
-              formData
-            );
-            console.log("File uploaded successfully:", uploadResponse);
-          } catch (error) {
-            console.error("Error uploading file:", error);
-          }
-        } catch (error) {
-          console.error("Erro ao criar edital", error);
-        }
-      } else {
-        alert("Insira algum arquivo para criar o edital");
-      }
-    };
+          const uploadResponse = await criarExame(formData);
+          console.log("File uploaded successfully:", uploadResponse);
 
-  const handleChange = (e:any) => {
-    const { name, value } = e.target;
-    setExame(prevState => ({
-        ...prevState,
-        [name]: value
-    }));
+          if (uploadResponse && uploadResponse.data) {
+            const novoExame = uploadResponse.data;
+            props.setExamoInfo((prevExames: Exame[]) => [...prevExames, novoExame]);
+          }
+
+          setShowModal(false);
+        } catch (error) {
+          console.error("Error uploading file:", error);
+        }
+      } catch (error) {
+        console.error("Erro ao criar edital", error);
+      }
+    } else {
+      alert("Insira algum arquivo para criar o edital");
+    }
   };
+  
 
     return (
         <>
           <button 
-              className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569]'
+              className='rounded-md px-2 py-2 ml-2 shadow-lg bg-[#6B3F97] hover:bg-[#4A2569] '
               onClick={() => resetModal()}>
               <FaPlus className='text-white' size={20} />
           </button>
@@ -107,13 +104,13 @@ export function AddExame(props: ModalProps){
           {showModal ? (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-transparent p-6 rounded-lg shadow-lg w-[35vw]">
-                <div className='bg-[#F0F0F0] h-[52vh] w-full rounded-lg shadow-lg overflow-y-auto'>
-                  <div className='flex  items-center justify-between p-6'>
-                    <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2 mt-2'>
+                <div className='bg-[#F0F0F0]  w-full rounded-lg shadow-lg overflow-y-auto flex flex-col justify-between gap-y-5 py-5'>
+                  <div className='flex  items-center justify-between px-6'>
+                    <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2'>
                       Exame
                     </h2>
                   </div>
-                  <div className='flex justify-start gap-8'>
+                  <div className='flex justify-center gap-8'>
                     <div className='items-center gap-2 mr-8'>
                       <label
                           className='block text-gray-700 text-sm font-bold mb-2'
@@ -135,21 +132,23 @@ export function AddExame(props: ModalProps){
                       />
                     </div>
                   </div>
-                  <div className='mt-8 mx-8'>
-                  <input
-                      type="file" name='file_url'
-                      onChange={subirPdf}
-                      className="hidden"
-                      id="upload"
-                  />
-                  <label htmlFor="upload" className='px-2 py-1 bg-[#2D6A4F] hover:bg-[#1D4D3F] rounded-md text-white items-center flex flex-row gap-2 text-lg cursor-pointer'>
-                      <FaFilePdf className='text-white' size={20} /> Adicionar PDF
-                  </label>
-
+                  <div className='mt-8 mx-8 flex flex-col'>
+                    <div className='flex flex-row'>
+                      <input
+                          type="file" name='file_url'
+                          onChange={subirPdf}
+                          className="hidden"
+                          id="upload"
+                      />
+                      <label htmlFor="upload" className='px-2 py-1 bg-[#2D6A4F] hover:bg-[#1D4D3F] rounded-md text-white items-center flex flex-row gap-2 text-lg cursor-pointer'>
+                          <FaFilePdf className='text-white' size={20} /> Adicionar PDF
+                      </label>
+                    </div>
+                    <p className='text-blue-700 w-auto hover:underline hover:text-blue-900 cursor-pointer'>
+                      {file?(file.name):('Insira um arquivo')}
+                    </p>
                   </div>
-                  <p className='text-blue-700 w-auto hover:underline hover:text-blue-900 cursor-pointer'>
-                    {file?(file.name):('Insira um arquivo')}
-                  </p>
+                  
 
                   <div className='flex justify-end gap-8 mx-8'>
                       <button onClick={()=>{criarNovoExame()}} className='border-2 text-lg border-[#6B3F97] bg-[#6B3F97] hover:border-[#4A2569] hover:bg-[#4A2569] px-4 py-1 rounded-md text-white font-semibold'>
