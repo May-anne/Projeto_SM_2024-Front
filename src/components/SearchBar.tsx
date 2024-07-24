@@ -18,9 +18,9 @@ interface CardsProps {
 
 interface Exame {
     id: number;
-    nome: string;
-    data: string;
-    cpf: string;
+    title: string;
+    cpf_idoso: string;
+    file: string;
 }
 
 interface Avaliacao {
@@ -119,12 +119,12 @@ export function SearchBar(props: CardsProps) {
                 avaliacao.nome.toLowerCase().includes(lowerCaseSearch) &&
                 (dataPublicacao === '' || avaliacao.data.includes(dataPublicacao))
             );
-        } else { // Então, é exame
+        } /*else { // Então, é exame
             filtered = dadosExame.filter((exame) =>
                 exame.nome.toLowerCase().includes(lowerCaseSearch) &&
                 (dataPublicacao === '' || exame.data.includes(dataPublicacao))
             );
-        }
+        }*/
 
         setFilteredInfo(filtered);
     }
@@ -172,7 +172,7 @@ export function SearchBar(props: CardsProps) {
                 <button onClick={()=>searchInfo(searchTerm)} className="h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
                     Buscar
                 </button>
-                    {props.ehExame&&<AddAvaliacao avaliacao={dadosExame} cpf={props.cpf} nome={props.nome} editar={false}/>}
+                    {props.ehExame&&<AddExame exame={dadosExame} cpf={props.cpf} nome={props.nome} editar={false}/>}
                     {props.ehTreino&&<AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={undefined} editar={false}/>} 
                     {props.ehAvaliacao&&<AddAvaliacao avaliacao={dadosAvaliacao} cpf={props.cpf} nome={props.nome}  editar={false}/>}
                 <div className="flex items-center ml-2">
@@ -211,8 +211,7 @@ export function SearchBar(props: CardsProps) {
                             <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
                                 <div className='flex flex-row justify-start items-center w-full'>
                                     <p className="w-[10vw] text-center border-r">{inf.id}</p>
-                                    <p className="w-[15vw] text-center border-r">{inf.nome}</p>
-                                    <p className="w-[10vw] text-center border-r">{inf.data}</p>
+                                    <p className="w-[15vw] text-center border-r">{inf.title}</p>
                                     <div className="flex gap-6 items-center mx-8">
                                         <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
@@ -247,7 +246,7 @@ export function SearchBar(props: CardsProps) {
                             <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
                                 <div className='flex flex-row justify-start items-center w-full'>
                                     <p className="w-[10vw] text-center border-r">{inf.id}</p>
-                                    <p className="w-[15vw] text-center border-r">{inf.nome}</p>
+                                    <p className="w-[15vw] text-center border-r">Avaliação {inf.id}</p>
                                     <p className="w-[10vw] text-center border-r">{inf.data}</p>
                                     <div className="flex gap-6 items-center mx-8">
                                         <button onClick={() => deleteModalide(inf, 'avaliacao')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2"> 

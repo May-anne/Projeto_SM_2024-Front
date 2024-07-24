@@ -227,9 +227,9 @@ export async function deletarExame(cpf: string) {
 }
 
 export async function getAllExamesbyUser(cpf: string | undefined) {
-  if (cpf) throw new Error('CPF não fornecido');
+  if (cpf) throw new Error('CPF não fornecido NO BACK');
   try{
-    const response = await api.get('forms/exame/listacpf?cpf_idoso='+cpf, {});
+    const response = await api.get('idosos_dados/exame/lista_cpf?cpf='+cpf, {});
     console.log(response.data)
     return response.data;
   } catch(error){
@@ -237,18 +237,21 @@ export async function getAllExamesbyUser(cpf: string | undefined) {
   }
 }
 
-export async function criarExame(cpf: string | undefined, titulo: string, file: string ) {
-  try{const response = await api.post('/forms/exame/upload', {
+export async function criarExame(cpf: string | undefined, titulo: string, link: File | null) {
+  console.log("cpf: "+cpf);
+  console.log("title: "+titulo);
+  console.log("link: "+link);
+  try{const response = await api.post('idosos_dados/exame/upload', {
     params: {
       cpf_idoso: cpf,
       title: titulo,
-      file_url: file,
+      file: link,
     },
   });
   console.log(response.data);
   return response.data;}
   catch(error){
-    console.log("Erro ao criar exame.")
+    console.log("Erro ao criar exameeeeee.")
   }
 }
 
@@ -330,6 +333,20 @@ export async function getAllAvaliacoes() {
   const response = await api.get('idosos_dados/avaliacao/listar/');
   console.log( response.data)
   return response.data;
+}
+
+export async function uploadFile(tipo: string, id:number, formData: FormData) {
+  try {
+    const response = await api.post(`${tipo}/inserir/${id}/pdf`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
 }
 
 export const api = axios.create({
