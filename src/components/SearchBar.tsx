@@ -4,6 +4,7 @@ import { AddExame } from "./AddExame";
 import { AddTreino } from "./AddTreino";
 import { AddAvaliacao } from "./AddAvaliacao";
 import { criarModalidade, deletarAvaliacao, deletarModalidade, getAllExamesbyUser, mostrarModalidade } from "@/lib/api"; 
+import { TiDeleteOutline } from "react-icons/ti";
 import Link from "next/link";
 
 interface CardsProps {
@@ -57,29 +58,84 @@ export function SearchBar(props: CardsProps) {
     const [dadosExame, setDadosExame] = useState<Exame[]>([]);
     const [dadosAvaliacao, setDadosAvaliacao] = useState<Avaliacao[]>([]);
 
+    const [filteredInfo, setFilteredInfo] = useState<any[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+
     const [dadosTreino, setDadosTreino] = useState<Treino[]>([]);
-
-
-    const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDataPublicacao(e.target.value);
-    };
 
     useEffect(() => {
         let termo: 'treino' | 'avaliacao';
-         if (props.ehTreino) {
+        if (props.ehTreino) {
             termo = 'treino';
-            mostrarModalidade(termo, props.cpf).then(setDadosTreino).catch(console.error);
+            mostrarModalidade(termo, props.cpf)
+                .then((result) => {
+                    setDadosTreino(result);  // Store the result
+                    setFilteredInfo(result); // Set filtered info with the fetched data
+                })
+                .catch(console.error);
         } else if (props.ehAvaliacao) {
             termo = 'avaliacao';
-            mostrarModalidade(termo, props.cpf).then(setDadosAvaliacao).catch(console.error);
-        } else { //Então, é exame
-            if(props.cpf){
-                console.log("cpf aquiii: "+props.cpf)
-                //getAllExamesbyUser(props.cpf).then(setDadosExame).catch(console.error)
+            mostrarModalidade(termo, props.cpf)
+                .then((result) => {
+                    setDadosAvaliacao(result);
+                    setFilteredInfo(result); // Set filtered info with the fetched data
+                })
+                .catch(console.error);
+        } else { // Então, é exame
+            // getAllExamesbyUser(props.cpf).then(setDadosExame).catch(console.error)
+        }
+    }, [props.ehTreino, props.ehAvaliacao, props.cpf]);
+
+    useEffect(() => {
+        searchInfo(searchTerm); // Atualiza a filtragem sempre que searchTerm ou dataPublicacao muda
+    }, [searchTerm, dataPublicacao]); 
+
+    const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDataPublicacao(e.target.value);
+        searchInfo(searchTerm);
+    };
+
+    function resetData(){
+        setDataPublicacao(''); 
+        setSearchTerm('');
+        searchInfo('');
+        if (props.ehTreino) {
+            setFilteredInfo(dadosTreino) 
         }
     }
 
-    }, [props.ehTreino, props.ehAvaliacao, props.cpf]);
+    function searchInfo(searchTerm: string) {
+        const lowerCaseSearch = searchTerm.toLowerCase().trim();
+
+        let filtered: any[] = [];
+
+        if (props.ehTreino) {
+            filtered = dadosTreino.filter((treino) =>
+                treino.treino_pres.toLowerCase().includes(lowerCaseSearch) &&
+                (dataPublicacao === '' || treino.data.includes(dataPublicacao))
+            );
+        } else if (props.ehAvaliacao) {
+            filtered = dadosAvaliacao.filter((avaliacao) =>
+                avaliacao.nome.toLowerCase().includes(lowerCaseSearch) &&
+                (dataPublicacao === '' || avaliacao.data.includes(dataPublicacao))
+            );
+        } /*else { // Então, é exame
+            filtered = dadosExame.filter((exame) =>
+                exame.nome.toLowerCase().includes(lowerCaseSearch) &&
+                (dataPublicacao === '' || exame.data.includes(dataPublicacao))
+            );
+        }*/
+
+        setFilteredInfo(filtered);
+    }
+    
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        //Detecta o aperto de enter na barra de pesquisa
+        if (e.key === "Enter") {
+            searchInfo(searchTerm);
+        }
+      };
 
     function deleteModalide(inf: any, modalide: 'exame' | 'treino' | 'avaliacao') { 
         if (confirm('Realmente deseja deletar?')) {
@@ -106,11 +162,14 @@ export function SearchBar(props: CardsProps) {
         <>
             <div className='w-[50vw] h-[6vh] rounded-md flex items-center mb-4'>
                 <input
+                    value={searchTerm}
+                    onChange={(e) => {setSearchTerm(e.target.value); searchInfo(e.target.value)}}
                     type="text"
                     placeholder={`Pesquisar ${props.pesquisa}...`}
+                    onKeyDown={handleKeyDown}
                     className="h-full px-[1vw] bg-white flex-grow outline-none rounded-tl-md rounded-bl-md border-white"
                 />
-                <button className="h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
+                <button onClick={()=>searchInfo(searchTerm)} className="h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
                     Buscar
                 </button>
                     {props.ehExame&&<AddExame exame={dadosExame} cpf={props.cpf} nome={props.nome} editar={false}/>}
@@ -129,8 +188,8 @@ export function SearchBar(props: CardsProps) {
                     />
                 </div>
             </div>
-            <div className='h-[40vh] w-[50vw] bg-white shadow-2xl rounded-md mb-4'>
-                <div className="w-[50vw] h-[5vh] bg-white shadow-md items-center">
+            <div className='h-[40vh] w-[50vw] bg-white shadow-2xl rounded-md'>
+                <div className="w-[50vw] h-[5vh] bg-white shadow-md items-center flex flex-row">
                     <div className='flex flex-row justify-start items-center w-full'>
                         <p className="w-[10vw] text-center border-r">ID</p>
                         <p className="w-[15vw] text-center border-r">{props.pesquisa}</p>
@@ -138,7 +197,15 @@ export function SearchBar(props: CardsProps) {
                     </div>
                 </div>
                 <div className="overflow-y-auto h-[35vh] mt-6">
-                    
+                    {dataPublicacao!=''&&(
+                        <div className="flex flex-row w-full justify-between px-5 py-2 text-sm items-center italic">
+                            <p>Data selecionada: {dataPublicacao}</p>
+                            <div className="flex flex-row gap-x-2">
+                                <p className="text-center">Resetar data </p>
+                                <button onClick={resetData} className="font-bold hover:opacity-60">X</button>
+                            </div>
+                        </div>
+                )}
                     {props.ehExame && (
                         dadosExame.map((inf) => (
                             <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
@@ -157,7 +224,7 @@ export function SearchBar(props: CardsProps) {
                     )}
 
                     {props.ehTreino&& (
-                        dadosTreino.map((inf) => (
+                        filteredInfo.map((inf:any) => (
                             <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
                                 <div className='flex flex-row justify-start items-center w-full'>
                                     <p className="w-[10vw] text-center border-r">{inf.id}</p>

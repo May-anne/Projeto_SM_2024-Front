@@ -128,7 +128,7 @@ export function AddExame(props: ModalProps){
             </button>
             ) : (
             <button 
-                className='text-[#6B3F97] hover:bg-gray-50 py-3 px-2 items-center flex rounded-full font-semibold'
+                className='text-[#6B3F97] hover:bg-gray-50 px-3 items-center flex rounded-full font-semibold'
                 onClick={() => resetModal()}>
                 Ver mais
             </button>
