@@ -10,6 +10,6 @@ export default async function cadastro() {
 
 async function getData() {
   if(!cookies().has('movimenta.token')){
-    //redirect('/api/auth/logout')
+    redirect('/api/auth/logout')
   }
 }

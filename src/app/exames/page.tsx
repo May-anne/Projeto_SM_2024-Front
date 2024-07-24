@@ -1,7 +1,14 @@
 import { AllExames } from "@/components/AllExames";
-import { Login } from "@/components/Login";
+import { cookies } from 'next/headers'
+import { redirect } from "next/navigation";
 
+export default async function login() {
+  await getData()
+  return <AllExames />;
+}
 
-export default function login() {
-  return <AllExames/>;
+async function getData() {
+  if(!cookies().has('movimenta.token')){
+    redirect('/api/auth/logout')
+  }
 }
