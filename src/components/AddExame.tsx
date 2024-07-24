@@ -16,13 +16,11 @@ export function AddExame(props: ModalProps){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [pdfExame, setPdfExame] = useState('pdf');
-    const [cpf, setCpf] = useState('');
     const [ExameInfo, setExame] = useState({
         id: 0,
         titulo: "",
-        cpf_idoso: props.cpf,
-        linkPDF: "",
+        cpf: props.cpf,
+        linkPDF: null as File | null,
     })
 
     const handleOpenModal = () => {
@@ -40,7 +38,7 @@ export function AddExame(props: ModalProps){
     useEffect(() => {
         const fetchExames = async () => {
           try {
-            const data = await getAllExamesbyUser(cpf);
+            const data = await getAllExamesbyUser(props.cpf);
             setExame(data);
           } catch (error) {
             console.error('Erro ao buscar exames:', error);
@@ -48,14 +46,10 @@ export function AddExame(props: ModalProps){
         };
     
         fetchExames();
-      }, [cpf]);
+      }, [props.cpf]);
 
 
       function criarNovoExame() {
-        if (!ExameInfo.cpf_idoso) {
-            console.error("CPF não fornecido");
-            return;
-        }
         criarExame(props.cpf, ExameInfo.titulo, ExameInfo.linkPDF)
             .then((response) => {
                 setExame(response);
@@ -77,14 +71,52 @@ export function AddExame(props: ModalProps){
         }));
     };
 
-      useEffect(() => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLInputElement & {
+            files: FileList;
+          };
+          if (target.files && target.files[0]) {
+            const formData = new FormData();
+            formData.append("exame_pdf", target.files[0]);
+              try {
+                const Response = await criarPreProjeto(
+                  userInfo.id,
+                  selectedEdital.id
+                );
+                const uploadResponse = await uploadFile(
+                  "preprojeto",
+                  preProjetoResponse.id,
+                  formData
+                );
+                console.log("File uploaded successfully:", uploadResponse);
+                setNewSearch(!newSearch);
+                setIsEditaisVisible(false);
+              } catch (error) {
+                console.error("Error uploading file:", error);
+              }
+          }
+
+        if (file) {
+            console.log('Arquivo selecionado:', file.name);
+            setExame(prevState => ({
+                ...prevState,
+                linkPDF: file
+            }));
+        } else {
+            // Caso nenhum arquivo seja selecionado (file === null)
+            setExame(prevState => ({
+                ...prevState,
+                linkPDF: null
+            }));
+        }
+    };
+
+    useEffect(() => {
         setExame(prevState => ({
             ...prevState,
-            ...props.exame,
-            cpf_idoso: props.cpf,
-            nome: props.nome
+            cpf: props.cpf
         }));
-    }, [props.exame, props.cpf, props.nome]);
+    }, [props.cpf]);
 
     return (
         <>
@@ -96,7 +128,7 @@ export function AddExame(props: ModalProps){
             </button>
             ) : (
             <button 
-                className='text-[#6B3F97] hover:bg-gray-50 py-3 px-2 items-center flex rounded-full font-semibold'
+                className='text-[#6B3F97] hover:bg-gray-50 px-3 items-center flex rounded-full font-semibold'
                 onClick={() => resetModal()}>
                 Ver mais
             </button>
@@ -170,9 +202,16 @@ export function AddExame(props: ModalProps){
                     </div>
                 </div>
                 <div className='mt-8 mx-8'>
-                    <button className='px-2 py-1 bg-[#2D6A4F] hover:bg-[#1D4D3F] rounded-md text-white mb-3 items-center flex gap-2 text-lg'>
+                <input
+                    type="file" name='file_url'
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="upload"
+/>
+                <label htmlFor="upload" className='px-2 py-1 bg-[#2D6A4F] hover:bg-[#1D4D3F] rounded-md text-white mb-3 items-center flex gap-2 text-lg cursor-pointer'>
                     <FaFilePdf className='text-white' size={20} /> Adicionar PDF
-                    </button>
+                </label>
+
                 </div>
                 <div className='mx-8'>
                     <button className='text-blue-700 w-auto hover:underline hover:text-blue-900 cursor-pointer'>
