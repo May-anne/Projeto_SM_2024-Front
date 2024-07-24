@@ -48,7 +48,8 @@ interface Treino {
   cpf_idoso: string
 }
 
-const urlBase = "http://localhost:8000/api/"
+export const urDownload = "http://localhost:8000/api"
+const urlBase = urDownload+"/"
 
 
 export async function loginUser(nome: string, senha: string) {
@@ -226,10 +227,13 @@ export async function deletarExame(cpf: string) {
   return response.data;
 }
 
-export async function getAllExamesbyUser(cpf: string | undefined) {
-  if (cpf) throw new Error('CPF não fornecido NO BACK');
+export async function getAllExamesbyUser(cpf: string) {
   try{
-    const response = await api.get('idosos_dados/exame/lista_cpf?cpf='+cpf, {});
+    const response = await api.get('idosos_dados/exame/lista_cpf', {
+      params: {
+        cpf_idoso: cpf,
+      },
+    });
     console.log(response.data)
     return response.data;
   } catch(error){
@@ -237,21 +241,17 @@ export async function getAllExamesbyUser(cpf: string | undefined) {
   }
 }
 
-export async function criarExame(cpf: string | undefined, titulo: string, link: File | null) {
-  console.log("cpf: "+cpf);
-  console.log("title: "+titulo);
-  console.log("link: "+link);
-  try{const response = await api.post('idosos_dados/exame/upload', {
-    params: {
-      cpf_idoso: cpf,
-      title: titulo,
-      file: link,
-    },
-  });
-  console.log(response.data);
-  return response.data;}
-  catch(error){
-    console.log("Erro ao criar exameeeeee.")
+export async function criarExame(formData: FormData) {
+  try {
+    const response = await api.post(`idosos_dados/exame/upload`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
   }
 }
 
@@ -303,6 +303,7 @@ export async function getAllTreinos() {
   console.log(response.data)
   return response.data;
 }
+
 export async function editarAvaliacao(cpf: string) {
   const response = await api.put('idosos_dados/avaliacao/', {
     params: {
@@ -333,20 +334,6 @@ export async function getAllAvaliacoes() {
   const response = await api.get('idosos_dados/avaliacao/listar/');
   console.log( response.data)
   return response.data;
-}
-
-export async function uploadFile(tipo: string, id:number, formData: FormData) {
-  try {
-    const response = await api.post(`${tipo}/inserir/${id}/pdf`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    throw error;
-  }
 }
 
 export const api = axios.create({
