@@ -4,36 +4,57 @@ import { FaLock } from 'react-icons/fa6';
 import { FaEdit, FaRegTrashAlt,FaFilePdf } from 'react-icons/fa';
 import { ModalDelete } from './ModalDelete';
 import { useEffect, useState } from 'react';
-import { criarModalidade, deletarModalidade } from '@/lib/api';
+import { criarModalidade, deletarModalidade, editarAvaliacao } from '@/lib/api';
 
 interface ModalProps {
-    avaliacao: any;
+    avaliacaoInfo: Avaliacao[];
+    setAvaliacaoInfo: Function
+    avaliacaoID: number | undefined
     nome: string;
-    cpf: string | undefined;
+    cpf: string;
     editar: boolean
+}
+
+interface Avaliacao {
+    id: number,
+    nome: string,
+    data: string,
+    cpf_idoso: string,
+    peso: number,
+    estatura: number,
+    marcha6: number,
+    per_cintura: number,
+    per_quadril: number,
+    per_panturrilha: number,
+    hg_esquerda1: number,
+    hg_esquerda2: number,
+    hg_direita1: number,
+    hg_direita2: number,
+    ir_vir1: number,
+    ir_vir2: number,
 }
 
 export function AddAvaliacao(props: ModalProps){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [editing, setIsEditing] = useState(false);
-    const [AvaliacaoInfo, setAvaliacao] = useState({
+    const [AvaliacaoInfo, setAvaliacao] = useState<Avaliacao>({
         id: 0,
         nome: "",
         cpf_idoso: props.cpf,
         data: "",
-        peso: "",
-        estatura: "",
-        marcha6: "",
-        per_cintura: "",
-        per_quadril:"",
-        per_panturrilha:"",
-        hg_esquerda1:"",
-        hg_esquerda2: "",
-        hg_direita1:"",
-        hg_direita2:"",
-        ir_vir1: "",
-        ir_vir2: "",
+        peso: 0,
+        estatura: 0,
+        marcha6: 0,
+        per_cintura: 0,
+        per_quadril:0,
+        per_panturrilha:0,
+        hg_esquerda1:0,
+        hg_esquerda2: 0,
+        hg_direita1:0,
+        hg_direita2:0,
+        ir_vir1: 0,
+        ir_vir2: 0,
     })
 
     const fieldTitles: { [key: string]: string } = {
@@ -60,13 +81,44 @@ export function AddAvaliacao(props: ModalProps){
     };
 
     useEffect(() => {
-        setAvaliacao(prevState => ({
-            ...prevState,
-            ...props.avaliacao,
-            cpf_idoso: props.cpf,
-            nome: props.nome
-        }));
-    }, [props.avaliacao, props.cpf, props.nome]);
+        if (showModal) {
+            document.body.classList.add("overflow-hidden");
+        } else {
+            document.body.classList.remove("overflow-hidden");
+        }
+        return () => {
+            document.body.classList.remove("overflow-hidden");
+        };
+    }, [showModal]);
+
+    useEffect(() => {
+        if(props.editar){
+            const selectedAvaliacao = props.avaliacaoInfo.find(avaliacao => avaliacao.id === props.avaliacaoID);
+            if (selectedAvaliacao) {
+                setAvaliacao(selectedAvaliacao);
+            }
+        }
+        else{
+            setAvaliacao({
+                id: 0,
+                nome: "",
+                cpf_idoso: props.cpf,
+                data: "",
+                peso: 0,
+                estatura: 0,
+                marcha6: 0,
+                per_cintura: 0,
+                per_quadril:0,
+                per_panturrilha:0,
+                hg_esquerda1:0,
+                hg_esquerda2: 0,
+                hg_direita1:0,
+                hg_direita2:0,
+                ir_vir1: 0,
+                ir_vir2: 0,
+            })
+        }
+    }, [props.avaliacaoID, props.avaliacaoInfo, props.cpf]);
 
 
     const handleOpenModal = () => {
@@ -83,20 +135,57 @@ export function AddAvaliacao(props: ModalProps){
 
     function resetModal(){
         setShowModal(true)
+        setAvaliacao({
+            id: 0,
+            nome: "",
+            cpf_idoso: props.cpf,
+            data: "",
+            peso: 0,
+            estatura: 0,
+            marcha6: 0,
+            per_cintura: 0,
+            per_quadril:0,
+            per_panturrilha:0,
+            hg_esquerda1:0,
+            hg_esquerda2: 0,
+            hg_direita1:0,
+            hg_direita2:0,
+            ir_vir1: 0,
+            ir_vir2: 0,
+        })
     
     }
 
     function createAvaliacao() {
         if (!AvaliacaoInfo.cpf_idoso) {
-            console.error("CPF não fornecidooo");
+            console.error("CPF não fornecido");
             return;
         }
         criarModalidade('avaliacao', AvaliacaoInfo)
             .then((response) => {
-                setAvaliacao(response);
+                props.setAvaliacaoInfo([...props.avaliacaoInfo, response]);
+                setShowModal(false);
             })
             .catch(console.error);
-        console.log(AvaliacaoInfo);
+    }
+    
+
+    function handleSalvar() {
+        console.log(AvaliacaoInfo)
+        editarAvaliacao(AvaliacaoInfo).then((result) => {
+            console.log(result)
+            const updatedTreinos = props.avaliacaoInfo.map(avaliacao => {
+            if (avaliacao.id === AvaliacaoInfo.id) {
+                return AvaliacaoInfo;
+            } else {
+                return avaliacao;
+            }
+            });
+            props.setAvaliacaoInfo(updatedTreinos);
+            setShowModal(false);
+        }).catch(error => {
+            console.error('Erro ao editar treino:', error);
+        });
     }
 
     return (
@@ -124,16 +213,9 @@ export function AddAvaliacao(props: ModalProps){
                             <div className='flex items-center justify-between p-6'>
                                 <h2 className='font-semibold text-2xl text-[#6B3F97] text-center mb-2 mt-2'>Título da Avaliação</h2>
                                 <div className='flex items-center gap-3'>
-                                    <button onClick={handleEditClick}><FaEdit className='text-[#6B3F97] cursor-pointer hover:text-[#4A2569]' size={22} /></button>
                                     <button onClick={handleOpenModal}><FaRegTrashAlt className='text-red-700 hover:text-red-900 cursor-pointer' size={20} /></button>
                                 </div>
                             </div>
-                            <ModalDelete 
-                                isOpen={isModalOpen} 
-                                onClose={handleCloseModal} 
-                                termo="esta avaliação"
-                                id={AvaliacaoInfo.id}
-                            />
                             <div className='grid grid-cols-3 ml-8'>
                                 <div className='items-center gap-2'>
                                     <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='id'>
@@ -152,12 +234,9 @@ export function AddAvaliacao(props: ModalProps){
                                     <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='nome'>
                                         Nome do Paciente
                                     </label>
-                                    <input
-                                        className='shadow appearance-none border rounded w-[20vw] py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                                        value={AvaliacaoInfo.nome}
-                                        onChange={handleChange}
-                                        name="nome"
-                                        />
+                                    <p className='shadow appearance-none border rounded w-[20vw] py-1 px-2 text-gray-700 leading-tight'>
+                                        {props.nome}
+                                    </p>
                                 </div>
                                 <div className='items-center gap-2'>
                                     <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='data'>
@@ -229,7 +308,9 @@ export function AddAvaliacao(props: ModalProps){
                                     ))}
                                 </div>
                             <div className='flex justify-end gap-8 mx-8 my-8'>
-                                <button onClick={()=>{createAvaliacao()}} className='border-2 text-lg border-[#6B3F97] bg-[#6B3F97] hover:border-[#4A2569] hover:bg-[#4A2569] px-4 py-1 rounded-md text-white font-semibold'>Salvar</button>
+                                {props.editar?(<button onClick={()=>{handleSalvar()}} className='border-2 text-lg border-[#6B3F97] bg-[#6B3F97] hover:border-[#4A2569] hover:bg-[#4A2569] px-4 py-1 rounded-md text-white font-semibold'>Salvar</button>)
+                                :
+                                (<button onClick={()=>{createAvaliacao()}} className='border-2 text-lg border-[#6B3F97] bg-[#6B3F97] hover:border-[#4A2569] hover:bg-[#4A2569] px-4 py-1 rounded-md text-white font-semibold'>Criar</button>)}
                                 <button onClick={()=>{setShowModal(false)}} className='border-2 text-lg border-[#9387AB] bg-transparent hover:border-[#4A2569] hover:text-[#4A2569] px-4 py-1 rounded-md text-[#9387AB] font-semibold'>Voltar</button>
                             </div>
                         </div>

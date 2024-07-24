@@ -73,24 +73,26 @@ export function SearchBar(props: CardsProps) {
                 termo = 'treino';
                 mostrarModalidade(termo, props.cpf)
                     .then((result) => {
-                        setDadosTreino(result);  // Store the result
-                        setFilteredInfo(result); // Set filtered info with the fetched data
+                        setDadosTreino(result);
+                        setFilteredInfo(result);
                     })
                     .catch(console.error);
-            } else if (props.ehAvaliacao) {
+            } 
+            else if (props.ehAvaliacao) {
                 termo = 'avaliacao';
                 mostrarModalidade(termo, props.cpf)
                     .then((result) => {
                         setDadosAvaliacao(result);
-                        setFilteredInfo(result); // Set filtered info with the fetched data
+                        setFilteredInfo(result);
                     })
                     .catch(console.error);
-            } else { // Então, é exame
+            } 
+            else {
                 getAllExamesbyUser(props.cpf)
                     .then((result) => {
                         setDadosExame(result);
                         console.log(result)
-                        setFilteredInfo(result); // Set filtered info with the fetched data
+                        setFilteredInfo(result);
                     })
                     .catch(console.error);
             } 
@@ -128,17 +130,16 @@ export function SearchBar(props: CardsProps) {
             );
         } else if (props.ehAvaliacao) {
             filtered = dadosAvaliacao.filter((avaliacao) =>
-                avaliacao.nome.toLowerCase().includes(lowerCaseSearch) &&
                 (dataPublicacao === '' || avaliacao.data.includes(dataPublicacao))
             );
-        } /*else { // Então, é exame
+        } else { // Então, é exame
             filtered = dadosExame.filter((exame) =>
                 exame.title.toLowerCase().includes(lowerCaseSearch) &&
-                (dataPublicacao === '' || exame.data.includes(dataPublicacao))
+                (dataPublicacao === '' || formatDate(exame.uploaded_at).includes(dataPublicacao))
             );
         }
 
-        setFilteredInfo(filtered);*/
+        setFilteredInfo(filtered);
     }
     
 
@@ -149,7 +150,7 @@ export function SearchBar(props: CardsProps) {
         }
       };
 
-    function deleteModalide(inf: any, modalide: 'exame' | 'treino' | 'avaliacao') { 
+      function deleteModalide(inf: any, modalide: 'exame' | 'treino' | 'avaliacao') { 
         if (confirm('Realmente deseja deletar?')) {
             if (!inf.id || !inf.cpf_idoso) {
                 console.error('ID não fornecido ou CPF não fornecido');
@@ -158,8 +159,17 @@ export function SearchBar(props: CardsProps) {
     
             deletarModalidade(modalide, inf)
                 .then(() => {
-                    if(modalide == 'treino'){
+                    if (modalide === 'treino') {
                         setDadosTreino(prevTreinos => prevTreinos.filter(treino => treino.id !== inf.id));
+                        setFilteredInfo(prevTreinos => prevTreinos.filter(treino => treino.id !== inf.id));
+                    } 
+                    if (modalide === 'avaliacao') {
+                        setDadosAvaliacao(prevAvaliacoes => prevAvaliacoes.filter(avaliacao => avaliacao.id !== inf.id));
+                        setFilteredInfo(prevAvaliacoes => prevAvaliacoes.filter(avaliacao => avaliacao.id !== inf.id));
+                    } 
+                    if (modalide === 'exame') {
+                        setDadosExame(prevExames => prevExames.filter(exame => exame.id !== inf.id));
+                        setFilteredInfo(prevExames => prevExames.filter(exame => exame.id !== inf.id));
                     } 
                 })
                 .catch(error => {
@@ -169,6 +179,7 @@ export function SearchBar(props: CardsProps) {
             console.log(inf); 
         }
     }
+    
 
     function formatDate(dateString: string): string {
         const date = new Date(dateString);
@@ -180,21 +191,25 @@ export function SearchBar(props: CardsProps) {
 
     return (
         <>
-            <div className='w-[50vw] h-[6vh] rounded-md flex items-center mb-4'>
-                <input
-                    value={searchTerm}
-                    onChange={(e) => {setSearchTerm(e.target.value); searchInfo(e.target.value)}}
-                    type="text"
-                    placeholder={`Pesquisar ${props.pesquisa}...`}
-                    onKeyDown={handleKeyDown}
-                    className="h-full px-[1vw] bg-white flex-grow outline-none rounded-tl-md rounded-bl-md border-white"
-                />
-                <button onClick={()=>searchInfo(searchTerm)} className="h-full px-4 py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
-                    Buscar
-                </button>
+            <div className='w-[50vw] h-[6vh] rounded-md flex items-center pb-4'>
+                    {!props.ehAvaliacao&&(
+                    <>
+                        <input
+                        value={searchTerm}
+                        onChange={(e) => {setSearchTerm(e.target.value); searchInfo(e.target.value)}}
+                        type="text"
+                        placeholder={`Pesquisar ${props.pesquisa}...`}
+                        onKeyDown={handleKeyDown}
+                        className="h-full px-[1vw] bg-white flex-row w-full outline-none rounded-tl-md rounded-bl-md border-white items-center"
+                        />
+                        <button onClick={()=>searchInfo(searchTerm)} className="h-full px-4 items-center flex flex-row py-2 bg-[#6B3F97] hover:bg-[#4A2569] text-white rounded-tr-md rounded-br-md">
+                            Buscar
+                        </button>
+                    </>
+                    )}
                     {props.ehExame&&<AddExame exameID={undefined} exameInfo={dadosExame} setExamoInfo={setDadosExame} cpf={props.cpf}/>}
                     {props.ehTreino&&<AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={undefined} editar={false}/>} 
-                    {props.ehAvaliacao&&<AddAvaliacao avaliacao={dadosAvaliacao} cpf={props.cpf} nome={props.nome}  editar={false}/>}
+                    {props.ehAvaliacao&&<AddAvaliacao avaliacaoID={undefined} avaliacaoInfo={dadosAvaliacao} cpf={props.cpf} nome={props.nome} setAvaliacaoInfo={setDadosAvaliacao} editar={false}/>}
                 <div className="flex items-center ml-2">
                     <input
                         id="inputDataPublicacao"
@@ -227,7 +242,7 @@ export function SearchBar(props: CardsProps) {
                         </div>
                 )}
                     {props.ehExame && (
-                        dadosExame.map((inf) => (
+                        filteredInfo.map((inf) => (
                             <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
                                 <div className='flex flex-row justify-start items-center w-full'>
                                     <p className="w-[10vw] text-center border-r">{inf.id}</p>
@@ -235,7 +250,7 @@ export function SearchBar(props: CardsProps) {
                                     <p className="w-[10vw] text-center border-r">{formatDate(inf.uploaded_at)}</p>
                                     
                                     <div className="flex flex-row justify-center gap-6 items-center mx-8">
-                                        <button className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
+                                        <button onClick={() => deleteModalide(inf, 'exame')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
                                             <FaRegTrashAlt />
                                         </button>
                                         <a href={urlDownload+inf.file} target="blank" className="rounded-md text-[#6B3F97] hover:bg-gray-50 px-2 py-2"><FaFileDownload  /></a>
@@ -263,27 +278,8 @@ export function SearchBar(props: CardsProps) {
                         ))
                     )}
 
-                    {props.ehTreino && props.searchAll && (
-                        filteredInfo.map((inf: any) => (
-                            <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
-                                <div className='flex flex-row justify-start items-center w-full'>
-                                    <p className="w-[10vw] text-center border-r">{inf.id}</p>
-                                    <p className="w-[15vw] text-center border-r">{inf.treino_pres}</p>
-                                    <p className="w-[10vw] text-center border-r">{inf.data}</p>
-                                    <div className="flex gap-6 items-center mx-8">
-                                        <button onClick={() => deleteModalide(inf, 'treino')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2">
-                                            <FaRegTrashAlt />
-                                        </button>
-                                        <AddTreino cpf={props.cpf} treinosInfo={dadosTreino} setTreinoInfo={setDadosTreino} treinoID={inf.id} editar={true}/>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    )}
-
-
                     {props.ehAvaliacao&& (
-                        dadosAvaliacao.map((inf) => (
+                        filteredInfo.map((inf) => (
                             <div key={inf.id} className="w-[50vw] h-[5vh] bg-white items-center">
                                 <div className='flex flex-row justify-start items-center w-full'>
                                     <p className="w-[10vw] text-center border-r">{inf.id}</p>
@@ -293,14 +289,12 @@ export function SearchBar(props: CardsProps) {
                                         <button onClick={() => deleteModalide(inf, 'avaliacao')} className="rounded-md text-red-1100 hover:bg-gray-50 px-2 py-2"> 
                                             <FaRegTrashAlt />
                                         </button>
-                                        <AddAvaliacao avaliacao={inf} cpf={props.cpf} nome={props.nome}  editar={true} />
+                                        <AddAvaliacao avaliacaoID={inf.id} avaliacaoInfo={dadosAvaliacao} cpf={props.cpf} nome={props.nome} setAvaliacaoInfo={setDadosAvaliacao} editar={true} />
                                     </div>
                                 </div>
                             </div>
                         ))
                     )}
-
-
                 </div>
             </div>
 

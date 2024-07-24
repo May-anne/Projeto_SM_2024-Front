@@ -1,5 +1,5 @@
 "use client";
-import { atualizarModalidade, createTreino, editarTreino } from "@/lib/api";
+import { createTreino, editarTreino } from "@/lib/api";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
@@ -36,7 +36,7 @@ export function AddTreino(props: ModalProps) {
         distancia_exec: 0,
         cpf_idoso: props.cpf
     });
-
+    
 
     useEffect(() => {
         if (showModal) {
@@ -49,55 +49,65 @@ export function AddTreino(props: ModalProps) {
         };
     }, [showModal]);
 
-    function resetModal() {
-            setShowModal(true);
-            if (props.treinoID !== undefined) {
-                const selectedTreino = props.treinosInfo.find(treino => treino.id === props.treinoID);
-                if (selectedTreino) {
-                    setPrescricao(selectedTreino);
-                } 
+    useEffect(() => {
+        if (props.editar&&props.treinoID) {
+            const selectedTreino = props.treinosInfo.find(treino => treino.id === props.treinoID);
+            if (selectedTreino) {
+                setPrescricao(selectedTreino);
             } 
-            else {
-                setPrescricao({
-                    id: 0,
-                    data: 'dd/mm/aaaa',
-                    treino_pres: '',
-                    tempo_pres: 0,
-                    distancia_pres: 0,
-                    tempo_exec: 0,
-                    distancia_exec: 0,
-                    cpf_idoso: props.cpf
-                });
-            }
+        } 
+    }, [props.treinoID]);
+
+    function resetModal() {
+        setShowModal(true);
+        if (props.treinoID!=0) {
+            const selectedTreino = props.treinosInfo.find(treino => treino.id === props.treinoID);
+            if (selectedTreino) {
+                setPrescricao(selectedTreino);
+            } 
+        } 
+        else {
+            setPrescricao({
+                id: 0,
+                data: 'dd/mm/aaaa',
+                treino_pres: '',
+                tempo_pres: 0,
+                distancia_pres: 0,
+                tempo_exec: 0,
+                distancia_exec: 0,
+                cpf_idoso: props.cpf
+            });
+        }
     }
 
     function handleSalvar() {
-        atualizarModalidade('treino', prescricao).then(() => {
-
-          const updatedTreinos = props.treinosInfo.map(treino => {
+        console.log(prescricao)
+        editarTreino(prescricao).then((result) => {
+            console.log(result)
+            const updatedTreinos = props.treinosInfo.map(treino => {
             if (treino.id === prescricao.id) {
-              return prescricao;
+                return prescricao;
             } else {
-              return treino;
+                return treino;
             }
-          });
-          props.setTreinoInfo(updatedTreinos);
-          setShowModal(false);
+            });
+            props.setTreinoInfo(updatedTreinos);
+            setShowModal(false);
         }).catch(error => {
-          console.error('Erro ao editar treino:', error);
+            console.error('Erro ao editar treino:', error);
         });
-      }
+    }
     
-      function handleAdicionar() {
+    function handleAdicionar() {
         console.log(prescricao)
         createTreino(prescricao).then((novoTreino) => {
-          const updatedTreinos = [...props.treinosInfo, novoTreino.data];
-          props.setTreinoInfo(updatedTreinos);
-          setShowModal(false);
+            const updatedTreinos = [...props.treinosInfo, novoTreino.data];
+            props.setTreinoInfo(updatedTreinos);
+            setShowModal(false);
         }).catch(error => {
-          console.error('Erro ao criar novo treino:', error);
+            console.error('Erro ao criar novo treino:', error);
         });
-      }
+    }
 
   return (
     <>
